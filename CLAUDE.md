@@ -11,8 +11,8 @@ Handoff for Claude Code. Full documentation in README.md.
   under the name always CITY | REGION in English; Domori is Food & Beverage (the PDF said Fashion & Luxury).
 - Sample data: the 3 companies of the PDF. Sample photos are extracted from the PDF (907–1196 px wide): the report
   flags them as too small for print, that is expected. Logos are missing (vector in the PDF).
-- Build order agreed: data + import + validation ✔, app setup ✔, then mobile card, desktop layout, flipbook,
-  index, print, PWA checks. Out of v1 (do not build, do not preclude): request an introduction, per-company stats,
+- Build order agreed: data + import + validation ✔, app setup ✔, mobile card ✔, desktop ✔, flipbook ✔,
+  index ✔, then print, PWA checks. Card order = by sector (AGO 04/11, option 1). Out of v1 (do not build, do not preclude): request an introduction, per-company stats,
   "My selection" PDF, US fairs calendar, AI matchmaker.
 - Original photos are not in git (`media/`). Generated images in `public/img` are committed for now; the publish
   pipeline (sheet button → GitHub Action → Drive download → import → images → Netlify) is still to be built.
@@ -22,4 +22,7 @@ Handoff for Claude Code. Full documentation in README.md.
   (fits 297:210 on screens ≥ ~1050 px tall, on laptops grows a little: ~840 px is the shortest a card gets at 13 px).
 - Flipbook (04/11): `src/flip.ts` (keys, swipe, slide with View Transitions, preload), `src/styles/flip.css`;
   `card_view` carries `via` (link, button, key, swipe). Order of the cards = import order (sector list, then sort_order).
+- Index (04/11): search and filters in `src/search.ts` (pure, tests), page in `src/views/companies.ts`
+  (state in the address ?q=&sector=&region=, "/" focuses the search). Searched fields: name, city/region, sector,
+  buyers, US events, discover, signature, what they bring, legal name.
 - Every value from the sheet goes through `html``…`` (escaping) and links through `safeUrl()`.
