@@ -210,22 +210,22 @@ function imaShortLinkToSlide() {
       var t = shape.getText();
       var found = t.find('https://(docs\\.google\\.com/forms|forms\\.gle)/\\S+');
       found.forEach(function (r) {
-        r.setText(shortUrl);
+        imaRelink_(r.setText(shortUrl), shortUrl);
         done++;
       });
-      if (found.length) {
-        // Slides colours a new link blue and underlined: keep the colour of the slide (gold on green)
-        t.find(shortUrl.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).forEach(function (r) {
-          r.getTextStyle().setLinkUrl(shortUrl).setUnderline(false).setForegroundColor('#E3C98F');
-        });
-        // the call to action above the link opens the form too
-        t.find('Compilate il modulo[^\\n]*').forEach(function (r) {
-          r.getTextStyle().setLinkUrl(shortUrl).setUnderline(false).setForegroundColor('#FCF7EE');
-        });
-      }
+      // the call to action (the button, its own shape) opens the form too
+      t.find('Compilate il modulo[^\\n]*|COMPILATE IL MODULO[^\\n]*').forEach(function (r) { imaRelink_(r, shortUrl); });
     });
   });
   imaFormSay_('Short link: ' + shortUrl + '\n\n' + (done ? 'Written in the slide (' + done + ').' : 'The slide has no form link to replace: paste it by hand.'));
+}
+
+/** Link on a text range, keeping the colour of the slide (Slides makes a new link blue and underlined). */
+function imaRelink_(range, url) {
+  var st = range.getTextStyle();
+  var colour = st.getForegroundColor();
+  st.setLinkUrl(url).setUnderline(false);
+  if (colour) st.setForegroundColor(colour);
 }
 
 function imaFormSay_(msg) {
