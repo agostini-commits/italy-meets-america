@@ -67,8 +67,9 @@ jobs:
           path: |
             media
             public/img
-          key: media-${{ github.run_id }}
-          restore-keys: media-
+          # v2: the cache saved on 04/11 by run 5 holds an empty image list (Drive folder still empty): ignored.
+          key: media-v2-${{ github.run_id }}
+          restore-keys: media-v2-
 
       - name: Read the sheet
         run: npm run fetch-sheet
