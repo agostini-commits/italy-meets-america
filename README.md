@@ -59,10 +59,24 @@ Locally, with the same environment variables: `npm run publish` (everything exce
 
 - **errors** (card not published): missing required field, text over the limit, invalid id/slug, duplicate id in
   the same edition, sector/region not in the list, invalid email, link not https, founding year, more than one bold
-  passage, gallery on a base card;
+  passage, package not in the list, portfolio photos on a package other than the Extended Profile or in
+  gallery_3..6, more than 3 Front Cover Partners in an edition;
 - **warnings**: photo below 2600×3600 px (fine on the web, not for print), landscape photo, logo below 800 px,
   missing file, sector or region written differently and auto-corrected (e.g. "food and beverage", "Lombardia"),
-  premium card without gallery.
+  Extended Profile with fewer than 2 portfolio photos, old package names (base, premium: still read).
+
+## Packages (media kit, AGO 04/11/2026)
+
+| `package` | Media kit | Pages | Where |
+|---|---|---|---|
+| `cover_partner` | Front Cover Partner | brand visual + company page | name on the cover ("With …", max 3), first in the yearbook |
+| `priority` | Priority Position Profile | brand visual + company page | right after the cover partners |
+| `corporate` | Corporate Profile | brand visual + company page | by sector |
+| `extended` | Extended Profile | + 2 portfolio pages, one photo each (`gallery_1`, `gallery_2`) | by sector |
+
+The brand visual is the full-page photo (`photo`). Order: cover partners, priority (both by `sort_order`, shown as
+"Featured" in the contents), then the rest by sector list and `sort_order` (`scripts/lib/order.ts`, tests). Rules in
+`PACKAGE_INFO` (`src/schema.ts`).
 
 ## Images
 
@@ -72,8 +86,8 @@ a 300 dpi sRGB JPG (long side 3600 px) used only in print, and a 1200×630 JPG f
 
 ## Print
 
-`/2026/print`: format **Magazine** (2 A4 portrait pages per card, 4 for premium) or **Single sheet** (1 A4 landscape
-page, 2 for premium), cover, **For the printer** (3 mm bleed + crop marks: page = A4 + 10 mm per side), page selection
+`/2026/print`: format **Magazine** (2 A4 portrait pages per card, 4 for the Extended Profile) or **Single sheet**
+(1 A4 landscape page, 2 for the Extended Profile), cover, **For the printer** (3 mm bleed + crop marks: page = A4 + 10 mm per side), page selection
 (all / none / sector / company), preview of the real sheets and "Print / Save as PDF".
 - Sheets are built in mm/pt (`src/views/print.ts`, `src/styles/print.css`); page sizes are named pages written at
   run time (`@page portrait` / `landscape`). Plan and page numbers in `src/print-plan.ts` (tests).

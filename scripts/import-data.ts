@@ -16,7 +16,8 @@ import { existsSync } from 'node:fs';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import sharp from 'sharp';
-import { PHOTO_MIN } from '../src/schema';
+import { PACKAGE_INFO, PACKAGES, PHOTO_MIN } from '../src/schema';
+import { sortCompanies } from './lib/order';
 import type { Company, Edition } from '../src/types';
 import { parseCompaniesCsv } from './lib/csv';
 import { crossCheck, isPublic, validateRow, type Lists, type RowResult } from './lib/validate';
@@ -101,20 +102,6 @@ async function checkImages(results: RowResult[]): Promise<{ checked: boolean; li
   return { checked: true, list };
 }
 
-function sortCompanies(list: Company[], sectors: string[]): Company[] {
-  const pos = (s: string) => {
-    const i = sectors.indexOf(s);
-    return i < 0 ? 999 : i;
-  };
-  return [...list].sort(
-    (a, b) =>
-      a.edition - b.edition ||
-      pos(a.sector) - pos(b.sector) ||
-      (a.sort_order ?? 9999) - (b.sort_order ?? 9999) ||
-      a.name.localeCompare(b.name, 'en'),
-  );
-}
-
 function reportMarkdown(p: {
   source: string;
   results: RowResult[];
@@ -140,7 +127,8 @@ function reportMarkdown(p: {
   L.push(`| Rows in the sheet | ${results.length} |`);
   for (const [s, n] of byStatus) L.push(`| status ${s} | ${n} |`);
   L.push(`| **Published in the app** | **${published.length}** |`);
-  L.push(`| Print pages (base 2, premium 4) | ${pages} |`);
+  L.push(`| Magazine pages (2 per card, 4 for the Extended Profile) | ${pages} |`);
+  for (const k of PACKAGES) L.push(`| ${PACKAGE_INFO[k].label} | ${published.filter((c) => c.package === k).length} |`);
   L.push(`| Approved/published rows NOT published because of errors | ${publicWithErrors.length} |`);
   L.push(`| Rows with warnings | ${withWarnings.length} |`, '');
 

@@ -1,5 +1,5 @@
 import { track } from '../analytics';
-import { bySector, type EditionData } from '../data';
+import { coverPartners, sections as yearbookSections, type EditionData } from '../data';
 import { esc, html, raw, safeUrl, type Raw } from '../lib/html';
 import { SOCIAL_ICONS } from '../lib/icons';
 import { FORMATS, pagesPerCard, planPrint, type Format, type Sheet } from '../print-plan';
@@ -12,7 +12,7 @@ import type { Company, ImageInfo, Social } from '../types';
  * Each sheet whose text does not fit shows a warning (never printed).
  */
 export function printView({ edition, companies }: EditionData) {
-  const sections = bySector(companies);
+  const sections = yearbookSections(companies);
   return html`
     <section class="print-page">
       <aside class="print-panel no-print" aria-labelledby="print-title">
@@ -103,7 +103,8 @@ function sheetInner(s: Sheet, data: EditionData): { bleed: Raw; trim: Raw } {
       bleed: html`${img(im[e.cover_photo], e.cover_photo_alt, 'ps-fill')}<div class="ps-cover-shade"></div>`,
       trim: html`<div class="ps-cover">
         <p class="ps-cover-top"><span>Forbes Italia</span><span>The Yearbook<br />Edition ${ed}</span></p>
-        <div><p class="ps-cover-kicker">Made in Italy for USA</p><h1 class="ps-cover-title">${e.title.replace(/ America$/, '')}<em>America</em></h1><p class="ps-cover-tag">${e.tagline}</p></div>
+        <div><p class="ps-cover-kicker">Made in Italy for USA</p><h1 class="ps-cover-title">${e.title.replace(/ America$/, '')}<em>America</em></h1><p class="ps-cover-tag">${e.tagline}</p>
+          ${partnersLine(data.companies, 'ps-cover-partners')}</div>
       </div>`,
     };
   }
@@ -121,13 +122,26 @@ function sheetInner(s: Sheet, data: EditionData): { bleed: Raw; trim: Raw } {
       trim: html`<div class="ps-single-photo-text"><p class="ps-sector">${c.sector}</p><p class="ps-headline">${c.headline}</p></div>
         <div class="ps-text ps-text--single" data-fit>${textBlocks(c, im)}</div>${footer(ed, s.page)}`,
     };
-  // gallery
+  // portfolio (Extended Profile): in the magazine one photo per page, full bleed like the brand visual
   const photos = (s.gallery ?? []).map((i) => c.gallery[i]).filter(Boolean);
+  if (s.orientation === 'portrait')
+    return {
+      bleed: photos[0] ? html`${img(im[photos[0].file], photos[0].alt, 'ps-fill')}<div class="ps-shade"></div>` : html`<div class="ps-paper"></div>`,
+      trim: html`<div class="ps-photo-text"><p class="ps-sector">${c.name} · Portfolio</p></div>${footer(ed, s.page, !!photos[0])}`,
+    };
   return {
     bleed: html`<div class="ps-paper"></div>`,
-    trim: html`<div class="ps-gallery-page"><p class="ps-label">${c.name} · Gallery</p>
+    trim: html`<div class="ps-gallery-page"><p class="ps-label">${c.name} · Portfolio</p>
       <div class="ps-gallery ps-gallery--${photos.length}">${photos.map((g) => img(im[g.file], g.alt, 'ps-fill'))}</div></div>${footer(ed, s.page)}`,
   };
+}
+
+/** "With A, B and C" for the cover (Front Cover Partners, max 3): empty when there are none. */
+export function partnersLine(companies: Company[], cls: string): Raw {
+  const names = coverPartners(companies).map((c) => c.name);
+  if (!names.length) return html``;
+  const list = names.length === 1 ? names[0] : `${names.slice(0, -1).join(', ')} and ${names[names.length - 1]}`;
+  return html`<p class="${cls}"><span>With</span> ${list}</p>`;
 }
 
 const MARKS = ['tl-h', 'tl-v', 'tr-h', 'tr-v', 'bl-h', 'bl-v', 'br-h', 'br-v'];

@@ -4,7 +4,7 @@
  * - error   → the card is NOT published (it would break the layout or the links);
  * - warning → the card is published, but someone should look at it (low-res photo, auto-corrected sector…).
  */
-import { LIMITS, MAX, PACKAGES, PUBLIC_STATUSES, SOCIALS, STATUSES } from '../../src/schema';
+import { LIMITS, MAX, PACKAGE_ALIASES, PACKAGE_INFO, PACKAGES, PUBLIC_STATUSES, SOCIALS, STATUSES } from '../../src/schema';
 import type { Company, Package, Social, Status, TextPart, UsEvent } from '../../src/types';
 
 export type Row = Record<string, string>;
@@ -127,8 +127,10 @@ export function validateRow(row: Row, line: number, lists: Lists): RowResult {
   const status = get('status') as Status;
   if (!STATUSES.includes(status)) err('status', `"${status}" not valid (${STATUSES.join(', ')})`);
 
-  const pkg = get('package') as Package;
-  if (!PACKAGES.includes(pkg)) err('package', `"${pkg}" not valid (base or premium)`);
+  const pkgRaw = get('package');
+  const pkg = (PACKAGE_ALIASES[pkgRaw] ?? pkgRaw) as Package;
+  if (!PACKAGES.includes(pkg)) err('package', `"${pkgRaw}" not valid (${PACKAGES.join(', ')})`);
+  else if (pkg !== pkgRaw) warn('package', `"${pkgRaw}" is the old name: write "${pkg}" (${PACKAGE_INFO[pkg].label})`);
 
   const sortRaw = get('sort_order');
   const sortOrder = sortRaw === '' ? null : Number(sortRaw);
@@ -220,13 +222,19 @@ export function validateRow(row: Row, line: number, lists: Lists): RowResult {
   const logo = required('logo');
   const photo = required('photo');
   const photoAlt = limited('photo_alt', LIMITS.photo_alt);
+  // Portfolio (gallery_1..2): only the Extended Profile, one photo per page. The sheet still has
+  // gallery_3..6 from the first version: they must stay empty.
   const gallery: { file: string; alt: string }[] = [];
   for (let i = 1; i <= MAX.gallery; i++) {
     const v = get(`gallery_${i}`);
-    if (v) gallery.push({ file: v, alt: `${name}, image ${i}` });
+    if (v) gallery.push({ file: v, alt: `${name}, portfolio image ${i}` });
   }
-  if (pkg === 'base' && gallery.length) err('gallery_1', 'the gallery is only for premium cards');
-  if (pkg === 'premium' && !gallery.length) warn('gallery_1', 'premium card without gallery');
+  for (let i = MAX.gallery + 1; i <= 6; i++)
+    if (get(`gallery_${i}`)) err(`gallery_${i}`, `the portfolio has ${MAX.gallery} photos (gallery_1 and gallery_2): leave gallery_${i} empty`);
+  const portfolio = PACKAGES.includes(pkg) ? PACKAGE_INFO[pkg].portfolio : 0;
+  if (!portfolio && gallery.length) err('gallery_1', 'portfolio photos are only for the Extended Profile');
+  if (portfolio && gallery.length < portfolio)
+    warn('gallery_1', `Extended Profile with ${gallery.length} of ${portfolio} portfolio photos`);
   for (const f of [logo, photo, ...gallery.map((g) => g.file)])
     if (f && /[\s/\\]/.test(f)) err('images', `"${f}": file names cannot contain spaces or slashes`);
 
@@ -266,14 +274,22 @@ export function validateRow(row: Row, line: number, lists: Lists): RowResult {
         logo,
         photo: { file: photo, alt: photoAlt, credit: get('photo_credit') || null },
         gallery,
-        pages: pkg === 'premium' ? 4 : 2,
+        pages: PACKAGE_INFO[pkg].pages,
       };
 
   return { line, id, edition: Number.isInteger(edition) ? edition : null, name, status, errors, warnings, company };
 }
 
-/** Checks across rows: duplicate ids in the same edition, sector variants. */
+/** Checks across rows: duplicate ids in the same edition, at most 3 Front Cover Partners per edition. */
 export function crossCheck(results: RowResult[]): void {
+  const partners = new Map<number | null, RowResult[]>();
+  for (const r of results)
+    if (r.company?.package === 'cover_partner') partners.set(r.edition, [...(partners.get(r.edition) ?? []), r]);
+  for (const list of partners.values())
+    for (const r of list.slice(MAX.coverPartners)) {
+      r.errors.push({ field: 'package', message: `more than ${MAX.coverPartners} Front Cover Partners in ${r.edition} (the cover has room for ${MAX.coverPartners}): ${list.map((x) => x.name).join(', ')}` });
+      r.company = null;
+    }
   const seen = new Map<string, RowResult>();
   for (const r of results) {
     if (!r.id) continue;

@@ -102,7 +102,7 @@ Come funziona:
 - Compilabile senza account Google. Le foto **non** si caricano dal Modulo (Google chiederebbe l'accesso): l'azienda
   incolla un link WeTransfer/Dropbox/Drive, salvato in `_internal_notes`. La redazione mette i file nella cartella
   foto e scrive i nomi nelle colonne `logo`, `photo`, `gallery_*`.
-- La redazione completa `package` (base/premium) e controlla il settore; poi `to_client` per mandare la bozza,
+- La redazione completa `package` (`corporate`, `priority`, `extended`, `cover_partner`: i 4 pacchetti del mediakit) e controlla il settore; poi `to_client` per mandare la bozza,
   `approved` dopo l'ok del cliente.
 - La stessa azienda che rimanda il Modulo mentre la riga è `draft` aggiorna quella riga; se la riga è già oltre la
   bozza ne nasce una nuova con id `-2` (da controllare).

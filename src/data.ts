@@ -49,6 +49,19 @@ export function loadEdition(year: number): Promise<EditionData> {
   return cache.get(year)!;
 }
 
+/** Front Cover Partners, in yearbook order (their names go on the cover, max 3). */
+export const coverPartners = (companies: Company[]) => companies.filter((c) => c.package === 'cover_partner');
+
+/**
+ * Contents of the yearbook, in reading order: "Featured" (Front Cover Partners and Priority Position,
+ * which the import puts first), then the other companies by sector.
+ */
+export function sections(companies: Company[]): [string, Company[]][] {
+  const featured = companies.filter((c) => c.package === 'cover_partner' || c.package === 'priority');
+  const rest = bySector(companies.filter((c) => !featured.includes(c)));
+  return featured.length ? [['Featured', featured], ...rest] : rest;
+}
+
 /** Companies grouped by sector, in the order of the data (import sorts by sector list). */
 export function bySector(companies: Company[]): [string, Company[]][] {
   const map = new Map<string, Company[]>();
