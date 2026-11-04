@@ -50,6 +50,7 @@ jobs:
           if [ -n "$missing" ]; then echo "::error::Setup incomplete, missing:$missing (see docs/PUBLISH-SETUP.md)"; exit 1; fi
 
       - uses: actions/checkout@v4
+        id: checkout
 
       - uses: actions/setup-node@v4
         with:
@@ -90,12 +91,12 @@ jobs:
         run: npx -y netlify-cli@27.13.0 deploy --prod --dir dist --no-build --message "Publish by $REQUESTED_BY (run ${{ github.run_id }})"
 
       - name: Report in the summary
-        if: always()
+        if: always() && steps.checkout.outcome == 'success'
         run: |
           if [ -f data/import-report.md ]; then cat data/import-report.md >> "$GITHUB_STEP_SUMMARY"; fi
 
       - name: Keep the report
-        if: always()
+        if: always() && steps.checkout.outcome == 'success'
         uses: actions/upload-artifact@v4
         with:
           name: import-report
@@ -107,7 +108,7 @@ jobs:
           retention-days: 90
 
       - name: Write the result in the sheet
-        if: always()
+        if: always() && steps.checkout.outcome == 'success'
         env:
           RESULT: ${{ job.status }}
         run: npm run publish-log
