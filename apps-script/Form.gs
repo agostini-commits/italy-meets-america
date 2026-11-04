@@ -314,10 +314,25 @@ function imaSlug_(s) {
     .replace(/&/g, ' and ').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 }
 
+/**
+ * Pure: one answer from e.namedValues. Every "Rebuild the company form" leaves the old columns in the
+ * responses tab with the same titles, so a title can carry several values (the current question first,
+ * then the empty old ones): the first non-empty one is the answer.
+ */
+function imaAnswer_(nv, title) {
+  var v = nv[title];
+  var list = Array.isArray(v) ? v : [v];
+  for (var i = 0; i < list.length; i++) {
+    var s = String(list[i] === undefined || list[i] === null ? '' : list[i]).trim();
+    if (s) return s;
+  }
+  return '';
+}
+
 /** Pure: form answers (+ address read from Google Maps) → values by column name of "Companies". */
 function imaFormToRow_(nv, edition, now, place) {
   var Q = IMA_FORM.Q;
-  var get = function (k) { var v = nv[Q[k]]; return (Array.isArray(v) ? v.join(', ') : v || '').trim(); };
+  var get = function (k) { return imaAnswer_(nv, Q[k]); };
   var notes = [];
   var intro = get('intro').replace(/\*\*/g, '');
   var bold = get('bold').replace(/\*\*/g, '');
@@ -367,7 +382,7 @@ function imaOnFormSubmit(e) {
   var edition = 2026;
   lists.forEach(function (r) { if (r[4] === 'current_edition' && r[5]) edition = Number(r[5]); });
   // Google Maps outside the lock (network); never blocks the row.
-  var link = ((e.namedValues[IMA_FORM.Q.maps] || [''])[0] || '').trim();
+  var link = imaAnswer_(e.namedValues, IMA_FORM.Q.maps);
   var place;
   try { place = link ? imaPlaceFromMaps_(link, regions) : { fields: {}, note: 'No Google Maps link' }; }
   catch (err) { place = { fields: {}, note: 'Google Maps error (' + err.message + '): ' + link }; }

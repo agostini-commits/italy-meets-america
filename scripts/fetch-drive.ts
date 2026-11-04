@@ -65,6 +65,9 @@ async function main() {
   const editions: Edition[] = JSON.parse(await readFile(join(ROOT, 'config/editions.json'), 'utf8'));
   const wanted = referencedFiles(parseCompaniesCsv(csv).rows.map((r) => r.row), editions.map((e) => e.cover_photo));
 
+  // A folder not shared with the service account lists as EMPTY (no error): check it first, or the
+  // site would be published with no photos and nobody would know why.
+  await gfetch(`${API}/${FOLDER}?fields=id,name&supportsAllDrives=true`, [SCOPES.driveRead]);
   const files = await listFolder(FOLDER);
   // Same name in two places: the most recent wins (list is ordered by date), and we say so.
   const byName = new Map<string, DriveFile>();
