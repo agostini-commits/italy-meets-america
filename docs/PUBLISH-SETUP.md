@@ -81,13 +81,24 @@ Prova senza Google: `scripts` accettano `GOOGLE_SHEETS_API` / `GOOGLE_DRIVE_API`
 ogni risposta diventa una riga di **Companies** in stato **draft**.
 
 1. Nell'editor Apps Script: **+** accanto a "File" → **Script** → nome `Form` → incollare `apps-script/Form.gs`.
-2. Sostituire `appsscript.json` con la versione aggiornata (servono i permessi per Moduli e trigger) e salvare.
+2. Sostituire `appsscript.json` con la versione aggiornata (servono i permessi per Moduli, Presentazioni, trigger e
+   Google Maps) e salvare.
 3. Ricaricare il foglio → **Italy meets America → Create the company form** → autorizzare. Il messaggio finale dà il
    link da mandare alle aziende e quello per modificare il Modulo. Va fatto **una volta sola** (una seconda volta
    mostra di nuovo i link).
 
 Come funziona:
-- Modulo in italiano, testi della pagina 2 in inglese, limiti di caratteri controllati durante la compilazione.
+- Due parti (AGO 04/11): **1 · Dati generali** (nome, ragione sociale, sede su Google Maps, settore, anno, sito,
+  email, social, link a foto e logo, referente: li compila anche la segreteria in pochi minuti) e **2 · Il racconto
+  dell'azienda** (titolo, presentazione, mission, vision, citazione, buyer, prodotti, offerta: il marketing, in inglese,
+  circa 30 minuti). Limiti di caratteri controllati durante la compilazione.
+- **Indirizzo da Google Maps**: l'azienda incolla il link della sede (Maps → Condividi → Copia link). Lo script segue il
+  link corto, legge le coordinate (o il nome del luogo) e chiede a Google Maps via, CAP, città (in inglese), provincia e
+  regione (portata ai nomi di `Lists`). Se il link non si legge la riga nasce lo stesso, con una nota in `_internal_notes`.
+- **Rebuild the company form**: dopo una modifica di `Form.gs` ricostruisce le domande sullo **stesso** Modulo (stesso
+  link); le risposte già arrivate restano in `_Form responses`.
+- **Short link and slide**: crea il link corto `forms.gle` e lo scrive (testo e clic) nella slide "Cosa chiediamo alle
+  aziende" (`IMA_FORM.SLIDE_ID`), al posto del link lungo. Si può rilanciare.
 - Compilabile senza account Google. Le foto **non** si caricano dal Modulo (Google chiederebbe l'accesso): l'azienda
   incolla un link WeTransfer/Dropbox/Drive, salvato in `_internal_notes`. La redazione mette i file nella cartella
   foto e scrive i nomi nelle colonne `logo`, `photo`, `gallery_*`.
