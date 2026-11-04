@@ -18,6 +18,9 @@ Handoff for Claude Code. Full documentation in README.md.
   import --strict, images, build, Netlify CLI deploy, `_Publish` log in the sheet). Service account, never "publish to web"
   (internal `_` columns). Only the Action deploys: the repo is NOT linked in Netlify. Photo folder on Drive:
   `1GhsGf2eXrM9wU8BdjxjBFD4Y07rtdw-k`. Original photos are not in git (`media/`, cached by the Action).
+- Company form (04/11): `apps-script/Form.gs` (FormApp, created once from the sheet menu, no login required): answers →
+  Companies rows in `draft` (`imaFormToRow_` is pure; question titles are the keys, do not rename). Photos by link, not upload.
+  Limits in `IMA_FORM.MAX` = `src/schema.ts`. Tested in Node with mocked Google services (scratch script).
 - There is no HTML preview file (AGO 04/11): the visual reference is the PDF.
 - Mobile card (04/11): `src/views/company.ts` + `src/styles/card.css`; quote without quotation marks, as in the PDF.
 - Desktop (AGO 04/11, option 1): spread with photo 38% / text 62%, text 13–16 px; width rule in `card.css`

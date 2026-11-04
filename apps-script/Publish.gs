@@ -24,6 +24,7 @@ function onOpen() {
     .addItem('Publish status', 'imaStatus')
     .addSeparator()
     .addItem('Open the site', 'imaOpenSite')
+    .addItem('Create the company form', 'imaCreateForm')
     .addToUi();
 }
 
