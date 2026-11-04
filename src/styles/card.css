@@ -101,14 +101,84 @@
   .card-gallery { grid-template-columns: repeat(3, 1fr); }
 }
 
-/* --- desktop: spread 297:210, photo left, text right (refined in the desktop step) --- */
+/* --- desktop (≥ 900 px): spread 297:210, photo left (36–50%), text right ---------------------
+ * The spread fits the screen height (header + page bar + margins = 150 px), max 1400 px wide.
+ * Every size derives from --u = text size, which scales with the spread width (container query
+ * units) between 13 and 16 px. If a long card does not fit, the spread grows taller instead of
+ * cutting the text, and the photo stays in view (sticky).
+ */
 @media (min-width: 900px) {
-  .card { display: grid; grid-template-columns: 1fr 1fr; aspect-ratio: 297 / 210; container-type: inline-size; margin: 24px auto; box-shadow: 0 10px 40px rgb(0 0 0 / .18); }
-  .card-photo { aspect-ratio: auto; height: 100%; }
-  .card-photo-text { padding: 0 3cqi 2.4cqi; }
-  .card-headline { font-size: 4.2cqi; }
-  .card-body { overflow: auto; font-size: clamp(13px, 1.15cqi, 16px); padding: 3cqi 3.5cqi; }
-  .card-name { font-size: 3.2cqi; }
-  .card-voice { grid-template-columns: 1fr 1fr; }
-  .card-contacts-grid { grid-template-columns: 1fr 1fr; }
+  .card {
+    --u: clamp(13px, 1.12cqi, 16px);
+    --pad-x: 3cqi;
+    --pad-y: 2.2cqi;
+    width: min(1400px, 100% - 64px, (100svh - 150px) * 297 / 210);
+    margin: 24px auto;
+    display: grid;
+    grid-template-columns: 38fr 62fr;
+    aspect-ratio: 297 / 210;
+    container-type: inline-size;
+    box-shadow: 0 1px 2px rgb(0 0 0 / .08), 0 18px 50px rgb(0 0 0 / .22);
+    font-size: var(--u);
+  }
+  .card-photo { aspect-ratio: auto; height: 100%; min-height: 0; }
+  .card-photo-img { position: absolute; inset: 0; }
+  .card-photo-text { padding: 0 2.4cqi var(--pad-y); }
+  .card-sector { font-size: max(10px, calc(var(--u) * .78)); }
+  .card-headline { font-size: clamp(34px, 3.9cqi, 56px); margin: .15em 0 .45em; }
+  .card-footer { font-size: max(10px, calc(var(--u) * .74)); }
+
+  .card-body { padding: var(--pad-y) var(--pad-x); line-height: 1.45; display: flex; flex-direction: column; box-shadow: inset 14px 0 18px -16px rgb(0 0 0 / .28); }
+  .card-head { gap: 1.6cqi; padding-bottom: calc(var(--u) * 1.1); }
+  .card-logo { width: 7.5cqi; }
+  .card-logo img { max-height: 5cqi; }
+  .card-name { font-size: calc(var(--u) * 2.75); }
+  .card-place { font-size: calc(var(--u) * .9); margin-top: .3em; }
+
+  .card-intro { margin: calc(var(--u) * 1.1) 0; font-size: var(--u); line-height: 1.5; text-align: justify; hyphens: auto; }
+  .card-intro::first-letter { font-size: 3.55em; margin: .1em .14em 0 -.05em; }
+
+  .card-label, .card-facts-label { font-size: max(10px, calc(var(--u) * .74)); }
+  .card-mv { padding: calc(var(--u) * .9) 0; gap: 2.4cqi; }
+  .card-mv dd, .card-connect dd, .card-section p { font-size: calc(var(--u) * .92); margin-top: .35em; }
+
+  .card-voice { grid-template-columns: 1.05fr 1fr; gap: 2.4cqi; padding: calc(var(--u) * 1.1) 0; align-items: start; }
+  .card-quote blockquote p { font-size: calc(var(--u) * 1.75); line-height: 1.14; }
+  .card-quote figcaption { font-size: calc(var(--u) * .86); margin-top: .9em; }
+  .card-connect { gap: calc(var(--u) * .8); }
+  .card-tag { font-size: max(10px, calc(var(--u) * .72)); }
+
+  .card-facts { grid-template-columns: minmax(0, .42fr) 1fr; gap: 1.2cqi; padding: calc(var(--u) * 1.1) 0 0; }
+  .card-since, .card-signature { padding: calc(var(--u) * .6) calc(var(--u) * .5) calc(var(--u) * .75); }
+  .card-year { font-size: calc(var(--u) * 2.7); }
+  .card-signature ul { grid-template-columns: repeat(var(--n, 1), minmax(0, 1fr)); margin-top: .5em; }
+  .card-signature li { font-size: calc(var(--u) * .9); padding: 0 .5em; }
+  .card-signature li + li { border-left: var(--rule); border-top: 0; }
+
+  .card-section { padding-top: calc(var(--u) * 1.15); }
+  .card-rule { margin-bottom: .5em; }
+
+  /* US events on one line, separated by a vertical bar, as in the PDF */
+  .card-events { display: flex; flex-wrap: wrap; align-items: center; }
+  .card-events li { border: 0; display: flex; align-items: center; }
+  .card-events li + li::before { content: '|'; margin: 0 .8em; color: var(--ink-2); }
+  .card-events a, .card-events span { min-height: 32px; padding: 0; font-size: calc(var(--u) * .92); }
+
+  .card-contacts-grid { grid-template-columns: 1fr 1fr; gap: 2cqi; font-size: calc(var(--u) * .86); line-height: 1.4; }
+  .card-links a { min-height: 0; padding: .1em 0; }
+  .card-contacts { display: grid; grid-template-columns: 1fr auto; column-gap: 1.6cqi; align-items: end; }
+  .card-contacts .card-rule { grid-column: 1 / -1; }
+  .card-social { margin: 0; gap: .5cqi; justify-content: flex-end; }
+  .card-social a { width: 2.6cqi; height: 2.6cqi; min-width: 30px; min-height: 30px; }
+  .card-social svg { width: 55%; height: 55%; }
+
+  .card-gallery { grid-template-columns: repeat(3, 1fr); }
+
+  /* the last block sits at the bottom of the page, like the printed card */
+  .card-contacts { margin-top: auto; }
+}
+
+/* Wide screens: when the spread is limited by the height, keep it centred with air around it. */
+@media (min-width: 900px) and (max-height: 640px) {
+  .card { width: min(1400px, 100% - 64px); }
 }
