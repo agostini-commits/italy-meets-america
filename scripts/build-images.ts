@@ -131,7 +131,16 @@ async function main() {
       const info = await processJob(job, previous);
       if (!info) {
         missing++;
-        console.warn(`  ⚠ ${job.folder}: "${job.file}" not found`);
+        // Original not available (e.g. not uploaded to Drive yet): keep the images already generated, if any,
+        // so a publication never removes photos from the site. The import report flags the missing file.
+        const old = previous[job.file];
+        const files = old ? [...Object.values(old.web), old.print, old.og, old.svg].filter((u): u is string => !!u) : [];
+        if (old && files.every((u) => existsSync(join(ROOT, 'public', u)))) {
+          manifest[job.file] = old;
+          console.warn(`  ⚠ ${job.folder}: original "${job.file}" not found, the images already published are kept`);
+        } else {
+          console.warn(`  ⚠ ${job.folder}: "${job.file}" not found`);
+        }
         continue;
       }
       if (info !== previous[job.file]) made++;

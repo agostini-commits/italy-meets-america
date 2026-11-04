@@ -31,10 +31,10 @@ scartate appena lette e non arrivano mai nel repository né sul sito.
 - `NETLIFY_AUTH_TOKEN`: Netlify → User settings → Applications → **Personal access tokens → New**.
 - `NETLIFY_SITE_ID`: `8c9d58db-22d4-47fd-a8ae-a408c6f63bbc`.
 
-**Secrets and variables → Actions → Variables**
-- `SHEET_ID`: `15YCZ1CYHhVl9hOGppfjQOQt8_ToyUsPOeoBenA6RxKg`
-- `DRIVE_FOLDER_ID`: `1GhsGf2eXrM9wU8BdjxjBFD4Y07rtdw-k`
+**Secrets and variables → Actions → Variables** (scheda Variables, non Secrets)
 - `PUBLISH_ENABLED`: `true` (così anche ogni modifica al codice unita su `main` va online con i dati del foglio)
+- `SHEET_ID` e `DRIVE_FOLDER_ID` non servono: foglio e cartella sono già scritti nell'automazione. Aggiungerli solo
+  se cambiano (stessi nomi, valore = nuovo ID).
 
 **Token per il foglio**: profilo GitHub → Settings → Developer settings → **Fine-grained tokens → Generate**:
 repository solo `italy-meets-america`, permesso **Actions: Read and write**, scadenza 1 anno (da rinnovare).
@@ -67,7 +67,7 @@ Un collegamento diretto pubblicherebbe i dati salvati nel repository, che posson
 
 | Messaggio | Causa |
 |---|---|
-| "Setup incomplete, missing: …" | manca un secret o una variabile del punto 2 |
+| "Setup incomplete, missing: …" | manca un secret del punto 2 (i nomi devono essere esatti, nella sezione Repository secrets di **Actions**) |
 | "Google API 403/404 … shared with the service account?" | foglio o cartella non condivisi con l'account di servizio |
 | "GitHub did not accept the request (401)" | `GITHUB_TOKEN` scaduto o senza permesso Actions |
 | "Strict mode: approved cards with errors" | una scheda approvata ha errori: correggere (vedi scheda Checks) o rimetterla in `in_review` |

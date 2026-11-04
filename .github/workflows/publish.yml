@@ -29,8 +29,9 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     env:
-      SHEET_ID: ${{ vars.SHEET_ID }}
-      DRIVE_FOLDER_ID: ${{ vars.DRIVE_FOLDER_ID }}
+      # Not secret (ids of the data sheet and of the photo folder): defaults here, a repository variable overrides them.
+      SHEET_ID: ${{ vars.SHEET_ID || '15YCZ1CYHhVl9hOGppfjQOQt8_ToyUsPOeoBenA6RxKg' }}
+      DRIVE_FOLDER_ID: ${{ vars.DRIVE_FOLDER_ID || '1GhsGf2eXrM9wU8BdjxjBFD4Y07rtdw-k' }}
       SITE_URL: ${{ vars.SITE_URL || 'https://italy-meets-america.netlify.app' }}
       GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
       REQUESTED_BY: ${{ inputs.requested_by || github.actor }}
@@ -50,6 +51,7 @@ jobs:
           if [ -n "$missing" ]; then echo "::error::Setup incomplete, missing:$missing (see docs/PUBLISH-SETUP.md)"; exit 1; fi
 
       - uses: actions/checkout@v4
+        id: checkout
 
       - uses: actions/setup-node@v4
         with:
@@ -65,8 +67,9 @@ jobs:
           path: |
             media
             public/img
-          key: media-${{ github.run_id }}
-          restore-keys: media-
+          # v2: the cache saved on 04/11 by run 5 holds an empty image list (Drive folder still empty): ignored.
+          key: media-v2-${{ github.run_id }}
+          restore-keys: media-v2-
 
       - name: Read the sheet
         run: npm run fetch-sheet
@@ -90,12 +93,12 @@ jobs:
         run: npx -y netlify-cli@27.13.0 deploy --prod --dir dist --no-build --message "Publish by $REQUESTED_BY (run ${{ github.run_id }})"
 
       - name: Report in the summary
-        if: always()
+        if: always() && steps.checkout.outcome == 'success'
         run: |
           if [ -f data/import-report.md ]; then cat data/import-report.md >> "$GITHUB_STEP_SUMMARY"; fi
 
       - name: Keep the report
-        if: always()
+        if: always() && steps.checkout.outcome == 'success'
         uses: actions/upload-artifact@v4
         with:
           name: import-report
@@ -107,7 +110,7 @@ jobs:
           retention-days: 90
 
       - name: Write the result in the sheet
-        if: always()
+        if: always() && steps.checkout.outcome == 'success'
         env:
           RESULT: ${{ job.status }}
         run: npm run publish-log
