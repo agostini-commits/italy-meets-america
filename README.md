@@ -48,12 +48,12 @@ Bold in the intro: `**one passage**`. Images: file names only (`bellavista-photo
 
 ### Updating the data from the sheet
 
-1. In the sheet: File → Share → Publish to web → tab **Companies** → **CSV** → Publish. Copy the link.
-2. Once: in Netlify (Site configuration → Environment variables) add `SHEET_CSV_URL` = that link.
-   Locally: `SHEET_CSV_URL=… npm run import-data` or `npm run import-data -- --url "…"`.
-3. Without the link: File → Download → CSV of the Companies tab, save it as `data/source/companies.csv`, then `npm run import-data`.
-4. Read `data/import-report.md`. A row with errors is **not** published; with `--strict` (automatic in CI) the
-   import fails if an approved row has errors, so a company never disappears silently.
+**Publish to site** (menu "Italy meets America" in the sheet) starts `.github/workflows/publish.yml`: sheet read with a
+service account (`npm run fetch-sheet`, internal `_` columns dropped), new or changed photos from the Drive folder
+(`npm run fetch-drive`), `import-data --strict`, `images`, `build`, Netlify deploy, result in the `_Publish` tab
+(`npm run publish-log`). Setup and troubleshooting: `docs/PUBLISH-SETUP.md`. The sheet is **not** published on the web.
+
+Locally, with the same environment variables: `npm run publish` (everything except the deploy).
 
 ### Validation (report)
 
@@ -112,5 +112,5 @@ New edition: add it to `config/editions.json`, duplicate the rows in the sheet w
 
 ## Deploy (Netlify)
 
-Build command `npm run build`, publish `dist` (see `netlify.toml`). `SITE_URL` (or Netlify's `URL`) is used for
-the Open Graph image addresses.
+Only the GitHub Action deploys (Netlify CLI, `--no-build`): do not link the repository in Netlify, it would publish
+the data stored in the repository instead of the sheet. `SITE_URL` is used for the Open Graph image addresses.

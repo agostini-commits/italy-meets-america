@@ -1,6 +1,6 @@
 # Import report – Italy meets America
 
-Source: data/source/companies.csv · 04/11/2026, 16:55:00
+Source: data/source/companies.csv · 04/11/2026, 19:55:49
 
 ## Summary
 

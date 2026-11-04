@@ -1,0 +1,113 @@
+# Publish to site: Google Sheet + Drive photos → checks → images → site → Netlify.
+# Started by the "Publish to site" menu of the data sheet (apps-script/Publish.gs), by hand from the
+# Actions tab, or by a merge on main (code changes go online with the current data).
+# Setup (once): docs/PUBLISH-SETUP.md.
+name: Publish to site
+
+on:
+  workflow_dispatch:
+    inputs:
+      requested_by:
+        description: Who asked for the publication (email)
+        required: false
+        default: manual
+  push:
+    branches: [main]
+
+# One publication at a time; a second click waits for the first to finish.
+concurrency:
+  group: publish-site
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    # On a merge only when the setup is done (variable PUBLISH_ENABLED = true).
+    if: github.event_name == 'workflow_dispatch' || vars.PUBLISH_ENABLED == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      SHEET_ID: ${{ vars.SHEET_ID }}
+      DRIVE_FOLDER_ID: ${{ vars.DRIVE_FOLDER_ID }}
+      SITE_URL: ${{ vars.SITE_URL || 'https://italy-meets-america.netlify.app' }}
+      GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
+      REQUESTED_BY: ${{ inputs.requested_by || github.actor }}
+      CI: 'true'
+    steps:
+      - name: Check the setup
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+        run: |
+          missing=""
+          [ -n "$GOOGLE_SERVICE_ACCOUNT_JSON" ] || missing="$missing secret:GOOGLE_SERVICE_ACCOUNT_JSON"
+          [ -n "$NETLIFY_AUTH_TOKEN" ] || missing="$missing secret:NETLIFY_AUTH_TOKEN"
+          [ -n "$NETLIFY_SITE_ID" ] || missing="$missing secret:NETLIFY_SITE_ID"
+          [ -n "$SHEET_ID" ] || missing="$missing variable:SHEET_ID"
+          [ -n "$DRIVE_FOLDER_ID" ] || missing="$missing variable:DRIVE_FOLDER_ID"
+          if [ -n "$missing" ]; then echo "::error::Setup incomplete, missing:$missing (see docs/PUBLISH-SETUP.md)"; exit 1; fi
+
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      # Originals and generated images from the previous run: only new or changed photos are processed.
+      - name: Restore photos from the last publication
+        uses: actions/cache@v4
+        with:
+          path: |
+            media
+            public/img
+          key: media-${{ github.run_id }}
+          restore-keys: media-
+
+      - name: Read the sheet
+        run: npm run fetch-sheet
+
+      - name: Download the photos from Drive
+        run: npm run fetch-drive
+
+      - name: Check the data
+        run: npm run import-data -- --strict
+
+      - name: Images (web, print, previews)
+        run: npm run images
+
+      - name: Build the site
+        run: npm run build
+
+      - name: Publish on Netlify
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+        run: npx -y netlify-cli@27.13.0 deploy --prod --dir dist --no-build --message "Publish by $REQUESTED_BY (run ${{ github.run_id }})"
+
+      - name: Report in the summary
+        if: always()
+        run: |
+          if [ -f data/import-report.md ]; then cat data/import-report.md >> "$GITHUB_STEP_SUMMARY"; fi
+
+      - name: Keep the report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: import-report
+          path: |
+            data/import-report.md
+            data/import-report.json
+            data/companies.json
+          if-no-files-found: ignore
+          retention-days: 90
+
+      - name: Write the result in the sheet
+        if: always()
+        env:
+          RESULT: ${{ job.status }}
+        run: npm run publish-log
