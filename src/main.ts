@@ -6,6 +6,8 @@ import './styles/tokens.css';
 import './styles/base.css';
 import './styles/card.css';
 import './styles/flip.css';
+import './styles/index.css';
+import './styles/print.css';
 
 import { registerSW } from 'virtual:pwa-register';
 import { cardLeft, cardShown } from './analytics';
@@ -13,10 +15,11 @@ import { preloadNeighbours, setupFlip, takeFlip, withTransition } from './flip';
 import { currentEdition, loadEdition, type EditionData } from './data';
 import { type Raw } from './lib/html';
 import { navigate, startRouter, url, type Route } from './router';
-import { companiesView } from './views/companies';
+import { companiesView, mountIndex } from './views/companies';
 import { companyView } from './views/company';
 import { coverView } from './views/cover';
-import { messageView, pageView, printView } from './views/pages';
+import { messageView, pageView } from './views/pages';
+import { mountPrint, printView } from './views/print';
 import { shell, type Section } from './views/shell';
 
 registerSW({ immediate: true });
@@ -99,9 +102,11 @@ async function render(route: Route) {
       }
       case 'companies':
         show(ed, 'companies', companiesView(data), `Companies – ${base}`);
+        mountIndex(data);
         break;
       case 'print':
         show(ed, 'print', printView(data), `Print – ${base}`);
+        mountPrint(data);
         break;
       case 'page':
         show(ed, 'page', pageView(data, route.page), `${route.page === 'editorial' ? 'Editorial' : 'Colophon'} – ${base}`);

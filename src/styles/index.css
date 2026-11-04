@@ -1,0 +1,55 @@
+/* Index: search, filters, grid. Interface colours (light / dark theme). */
+.index-head h1 { margin-bottom: 8px; }
+.index-lead { margin: 0 0 20px; color: var(--ui-muted); max-width: 60ch; }
+
+.index-form { position: relative; z-index: 3; display: grid; gap: 12px; margin: 0 calc(var(--gutter) * -1); padding: 12px var(--gutter);
+  background: var(--ui-bg); border-bottom: 1px solid var(--ui-line); }
+.index-search { display: flex; align-items: center; gap: 10px; min-height: 52px; padding: 0 14px; border: 1px solid var(--ui-line); border-radius: 12px;
+  background: var(--ui-bar); color: var(--ui-muted); }
+.index-search:focus-within { border-color: var(--ui-accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--ui-accent) 25%, transparent); }
+.index-search input { flex: 1; min-width: 0; height: 50px; border: 0; background: none; color: var(--ui-fg); font: 16px var(--sans); outline: none; }
+.index-search input::placeholder { color: var(--ui-muted); }
+.index-search kbd { font: 12px var(--sans); border: 1px solid var(--ui-line); border-radius: 6px; padding: 2px 7px; }
+@media (hover: none) { .index-search kbd { display: none; } }
+
+.index-filters { display: grid; gap: 10px; }
+.index-sectors { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; margin: 0 calc(var(--gutter) * -1); padding: 0 var(--gutter);
+  scroll-snap-type: x proximity; -webkit-overflow-scrolling: touch; }
+.index-sectors::-webkit-scrollbar { display: none; }
+.chip { flex: 0 0 auto; scroll-snap-align: start; display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 0 14px;
+  border: 1px solid var(--ui-line); border-radius: 999px; background: var(--ui-bar); color: var(--ui-fg); font: 500 14px var(--sans); cursor: pointer; white-space: nowrap; }
+.chip:hover:not(:disabled) { border-color: var(--ui-fg); }
+.chip[aria-pressed='true'] { background: var(--ui-accent); border-color: var(--ui-accent); color: var(--ui-bg); }
+.chip:disabled { opacity: .45; cursor: default; }
+.chip-n { font-size: 12px; font-variant-numeric: tabular-nums; opacity: .75; }
+
+.index-region { display: flex; align-items: center; gap: 10px; font: 500 14px var(--sans); color: var(--ui-muted); }
+.index-region select { flex: 1; min-height: 44px; padding: 0 12px; border: 1px solid var(--ui-line); border-radius: 10px; background: var(--ui-bar); color: var(--ui-fg); font: 15px var(--sans); }
+
+.index-status { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 44px; margin: 8px 0 12px; }
+.index-status p { margin: 0; font: 500 14px var(--sans); color: var(--ui-muted); }
+.index-clear { min-height: 44px; padding: 0 4px; border: 0; background: none; color: var(--ui-fg); font: 500 14px var(--sans); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+
+.index-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px 16px; }
+.index-item { display: grid; gap: 4px; text-decoration: none; color: inherit; }
+.index-img { aspect-ratio: 4 / 5; object-fit: cover; width: 100%; height: auto; margin-bottom: 8px; transition: transform .3s ease; }
+.index-item:hover .index-img { transform: scale(1.015); }
+.index-item:hover .index-name { text-decoration: underline; text-underline-offset: 3px; }
+.index-item .label { color: var(--ui-muted); }
+.index-name { font: 700 19px/1.15 var(--serif); }
+.index-city { font-size: 14px; color: var(--ui-muted); }
+.index-why { display: grid; gap: 4px; margin-top: 6px; font-size: 13px; line-height: 1.35; color: var(--ui-fg); }
+.index-why b { display: block; font: 600 10px var(--sans); letter-spacing: .1em; text-transform: uppercase; color: var(--ui-muted); }
+.index mark { background: color-mix(in srgb, var(--gold) 38%, transparent); color: inherit; border-radius: 2px; padding: 0 1px; }
+.index-empty { padding: 48px 0; text-align: center; color: var(--ui-muted); }
+.index-empty .btn { margin-top: 8px; border: 0; cursor: pointer; }
+
+@media (min-width: 600px) {
+  .index-grid { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 36px 24px; }
+  .index-filters { grid-template-columns: 1fr auto; align-items: center; }
+  .index-sectors { flex-wrap: wrap; overflow: visible; margin: 0; padding: 0; }
+  .index-region select { flex: 0 0 220px; }
+}
+/* Fixed under the header only on desktop: on phones it would take half the screen. */
+@media (min-width: 900px) { .index-form { position: sticky; top: 56px; } }
+.index-search input:not(:placeholder-shown) ~ kbd { display: none; }

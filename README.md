@@ -70,6 +70,18 @@ Bold in the intro: `**one passage**`. Images: file names only (`bellavista-photo
 For every photo: WebP at the real widths up to 600/1000/1600 (never enlarged: a 907 px photo gets 600 and 907),
 a 300 dpi sRGB JPG (long side 3600 px) used only in print, and a 1200×630 JPG for link previews.
 
+## Print
+
+`/2026/print`: format **Magazine** (2 A4 portrait pages per card, 4 for premium) or **Single sheet** (1 A4 landscape
+page, 2 for premium), cover, **For the printer** (3 mm bleed + crop marks: page = A4 + 10 mm per side), page selection
+(all / none / sector / company), preview of the real sheets and "Print / Save as PDF".
+- Sheets are built in mm/pt (`src/views/print.ts`, `src/styles/print.css`); page sizes are named pages written at
+  run time (`@page portrait` / `landscape`). Plan and page numbers in `src/print-plan.ts` (tests).
+- Page numbers = position in the whole yearbook (cover = 1), so a card keeps its number in any selection.
+- The 300 dpi JPGs are loaded only when printing; a sheet whose text does not fit shows a warning (not printed).
+- A card with every field at its maximum length fits both formats (tested with a synthetic card).
+- Browsers cannot write PDF TrimBox/BleedBox: the printer reads trim from the crop marks.
+
 ## Analytics
 
 All events go through `track()` in `src/analytics.ts` (card_view, card_time, click_email, click_website,

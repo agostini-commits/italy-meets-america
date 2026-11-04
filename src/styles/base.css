@@ -34,7 +34,7 @@ main:focus { outline: none; }
 .cover-title { font: 700 clamp(48px, 13vw, 112px)/0.95 var(--serif); margin: 12px 0 16px; }
 .cover-title em { display: block; font-style: italic; }
 .cover-tagline { max-width: 34ch; margin: 0 0 24px; }
-.contents, .index, .page { max-width: 1100px; margin: 0 auto; padding: 32px var(--gutter) 64px; }
+.contents, .index, .page { max-width: 1240px; margin: 0 auto; padding: 32px var(--gutter) 64px; }
 .contents h2, .index h1, .page h1 { font: 700 34px/1.1 var(--serif); margin: 0 0 20px; }
 .contents h3 { margin: 28px 0 8px; color: var(--ui-accent); }
 .contents-pages, .contents-list { list-style: none; margin: 0; padding: 0; }
@@ -43,16 +43,6 @@ main:focus { outline: none; }
   padding: 8px 0; border-bottom: 1px solid var(--ui-line); text-decoration: none; }
 .toc-name { font: 700 20px var(--serif); }
 .toc-city { color: var(--ui-muted); font-size: 14px; }
-
-/* --- index ------------------------------------------------------------------ */
-.index-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 16px; }
-@media (min-width: 600px) { .index-grid { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 32px 24px; } }
-.index-item { display: grid; gap: 4px; text-decoration: none; }
-.index-item:hover .index-name { text-decoration: underline; text-underline-offset: 3px; }
-.index-item .label { color: var(--ui-muted); }
-.index-img { aspect-ratio: 4 / 5; object-fit: cover; width: 100%; height: auto; margin-bottom: 6px; }
-.index-name { font: 700 19px/1.15 var(--serif); }
-.index-city { font-size: 14px; color: var(--ui-muted); }
 
 @media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
 @media print { .no-print { display: none !important; } body { background: #fff; } }
