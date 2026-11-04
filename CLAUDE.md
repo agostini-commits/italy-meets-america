@@ -20,4 +20,6 @@ Handoff for Claude Code. Full documentation in README.md.
 - Mobile card (04/11): `src/views/company.ts` + `src/styles/card.css`; quote without quotation marks, as in the PDF.
 - Desktop (AGO 04/11, option 1): spread with photo 38% / text 62%, text 13–16 px; width rule in `card.css`
   (fits 297:210 on screens ≥ ~1050 px tall, on laptops grows a little: ~840 px is the shortest a card gets at 13 px).
+- Flipbook (04/11): `src/flip.ts` (keys, swipe, slide with View Transitions, preload), `src/styles/flip.css`;
+  `card_view` carries `via` (link, button, key, swipe). Order of the cards = import order (sector list, then sort_order).
 - Every value from the sheet goes through `html``…`` (escaping) and links through `safeUrl()`.

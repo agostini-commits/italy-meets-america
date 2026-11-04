@@ -112,19 +112,39 @@ export function companyCard(c: Company, data: EditionData, eager: boolean) {
     </article>`;
 }
 
-/** Flipbook: one card at a time, previous / next, position. Swipe and keyboard are wired in main.ts. */
+const ARROW = {
+  prev: '<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+  next: '<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+};
+
+/**
+ * Flipbook: one card at a time. Buttons (bar at the bottom on mobile, arrows beside the spread on
+ * desktop), position "3 of 250" with a progress line, keyboard arrows and swipe (src/flip.ts).
+ * At the ends the arrows lead back to the contents.
+ */
 export function companyView(data: EditionData, id: string) {
   const list = data.companies;
   const i = list.findIndex((c) => c.id === id);
   if (i < 0) return null;
   const ed = data.edition.edition;
+  const c = list[i];
   const prev = list[i - 1];
   const next = list[i + 1];
+  const pct = ((i + 1) / list.length) * 100;
+  const btn = (dir: 'prev' | 'next', target: Company | undefined) =>
+    target
+      ? html`<a class="flip-btn flip-${dir}" rel="${dir}" href="${url.company(ed, target.id)}" data-flip="${dir}" aria-label="${dir === 'prev' ? 'Previous' : 'Next'}: ${target.name}">${raw(ARROW[dir])}<span class="flip-btn-name" aria-hidden="true">${target.name}</span></a>`
+      : html`<a class="flip-btn flip-${dir} flip-end" href="${url.cover(ed)}" aria-label="Back to contents">${raw(ARROW[dir])}<span class="flip-btn-name" aria-hidden="true">Contents</span></a>`;
   return html`
-    ${companyCard(list[i], data, true)}
-    <nav class="flip no-print" aria-label="Pages">
-      ${prev ? html`<a class="flip-btn" rel="prev" href="${url.company(ed, prev.id)}" data-flip="prev" aria-label="Previous: ${prev.name}">←</a>` : html`<a class="flip-btn" href="${url.cover(ed)}" aria-label="Back to contents">←</a>`}
-      <span class="flip-pos" aria-live="polite">${i + 1} / ${list.length}</span>
-      ${next ? html`<a class="flip-btn" rel="next" href="${url.company(ed, next.id)}" data-flip="next" aria-label="Next: ${next.name}">→</a>` : html`<span class="flip-btn" aria-hidden="true"></span>`}
-    </nav>`;
+    <div class="flipbook" data-index="${i}">
+      ${companyCard(c, data, true)}
+      <nav class="flip no-print" aria-label="Flip through the companies">
+        ${btn('prev', prev)}
+        <div class="flip-pos">
+          <span class="flip-count" aria-live="polite"><span class="flip-sector">${c.sector} · </span>${i + 1} of ${list.length}</span>
+          <span class="flip-bar" aria-hidden="true"><span style="width:${pct.toFixed(2)}%"></span></span>
+        </div>
+        ${btn('next', next)}
+      </nav>
+    </div>`;
 }

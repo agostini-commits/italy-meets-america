@@ -109,13 +109,14 @@
  * cutting the text, and the photo stays in view (sticky).
  */
 @media (min-width: 900px) {
+  :root { --spread-w: min(1400px, 100vw - 64px, max((100svh - 150px) * 297 / 210, 1150px)); }
   .card {
     --u: clamp(13px, 1.12cqi, 16px);
     --pad-x: 3cqi;
     --pad-y: 2.2cqi;
     /* Fits the screen height when possible; never narrower than 1150 px (where a card at 13 px is
        shortest, ~840 px: measured on the 2026 sample cards), never wider than the window or 1400 px. */
-    width: min(1400px, 100% - 64px, max((100svh - 150px) * 297 / 210, 1150px));
+    width: var(--spread-w);
     margin: 24px auto;
     display: grid;
     grid-template-columns: 38fr 62fr;

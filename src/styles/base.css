@@ -1,7 +1,7 @@
 *, *::before, *::after { box-sizing: border-box; }
 html { -webkit-text-size-adjust: 100%; }
 body { margin: 0; background: var(--ui-bg); color: var(--ui-fg); font: 16px/1.5 var(--sans); overflow-x: hidden; }
-img { max-width: 100%; display: block; }
+img { max-width: 100%; height: auto; display: block; }
 a { color: inherit; }
 :focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
 .skip-link { position: absolute; left: -9999px; top: 8px; z-index: 10; background: var(--forbes-green); color: #fff; padding: 10px 14px; }
@@ -44,16 +44,13 @@ main:focus { outline: none; }
 .toc-name { font: 700 20px var(--serif); }
 .toc-city { color: var(--ui-muted); font-size: 14px; }
 
-/* --- flipbook --------------------------------------------------------------- */
-.flip { position: sticky; bottom: 0; display: flex; justify-content: space-between; align-items: center; padding: 8px var(--gutter);
-  background: var(--ui-bar); backdrop-filter: blur(10px); border-top: 1px solid var(--ui-line); }
-.flip-btn { min-width: var(--tap); min-height: var(--tap); display: inline-flex; align-items: center; justify-content: center; font-size: 22px; text-decoration: none; border-radius: 50%; }
-.flip-pos { font: 500 14px var(--sans); font-variant-numeric: tabular-nums; }
-
 /* --- index ------------------------------------------------------------------ */
-.index-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 20px; }
+.index-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 16px; }
+@media (min-width: 600px) { .index-grid { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 32px 24px; } }
 .index-item { display: grid; gap: 4px; text-decoration: none; }
-.index-img { aspect-ratio: 4 / 5; object-fit: cover; width: 100%; margin-bottom: 6px; }
+.index-item:hover .index-name { text-decoration: underline; text-underline-offset: 3px; }
+.index-item .label { color: var(--ui-muted); }
+.index-img { aspect-ratio: 4 / 5; object-fit: cover; width: 100%; height: auto; margin-bottom: 6px; }
 .index-name { font: 700 19px/1.15 var(--serif); }
 .index-city { font-size: 14px; color: var(--ui-muted); }
 
