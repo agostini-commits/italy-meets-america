@@ -214,9 +214,14 @@ function imaShortLinkToSlide() {
         done++;
       });
       if (found.length) {
-        t.find(shortUrl.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).forEach(function (r) { r.getTextStyle().setLinkUrl(shortUrl); });
+        // Slides colours a new link blue and underlined: keep the colour of the slide (gold on green)
+        t.find(shortUrl.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).forEach(function (r) {
+          r.getTextStyle().setLinkUrl(shortUrl).setUnderline(false).setForegroundColor('#E3C98F');
+        });
         // the call to action above the link opens the form too
-        t.find('Compilate il modulo[^\\n]*').forEach(function (r) { r.getTextStyle().setLinkUrl(shortUrl); });
+        t.find('Compilate il modulo[^\\n]*').forEach(function (r) {
+          r.getTextStyle().setLinkUrl(shortUrl).setUnderline(false).setForegroundColor('#FCF7EE');
+        });
       }
     });
   });
