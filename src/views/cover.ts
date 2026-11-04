@@ -12,7 +12,10 @@ export function coverView({ edition, companies, images }: EditionData) {
         <p class="label">${edition.kicker}</p>
         <h1 id="cover-title" class="cover-title">${edition.title.replace(/ America$/, '')} <em>America</em></h1>
         <p class="cover-tagline">${edition.tagline}</p>
-        <a class="btn" href="${companies[0] ? url.company(edition.edition, companies[0].id) : url.companies(edition.edition)}">Start reading</a>
+        <p class="cover-actions">
+          <a class="btn" href="${companies[0] ? url.company(edition.edition, companies[0].id) : url.companies(edition.edition)}">Start reading</a>
+          <button type="button" class="btn btn-ghost" data-install hidden>Install the app</button>
+        </p>
       </div>
     </section>
     <section class="contents" aria-labelledby="contents-title">

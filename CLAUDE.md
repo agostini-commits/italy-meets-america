@@ -12,7 +12,7 @@ Handoff for Claude Code. Full documentation in README.md.
 - Sample data: the 3 companies of the PDF. Sample photos are extracted from the PDF (907–1196 px wide): the report
   flags them as too small for print, that is expected. Logos are missing (vector in the PDF).
 - Build order agreed: data + import + validation ✔, app setup ✔, mobile card ✔, desktop ✔, flipbook ✔,
-  index ✔, print ✔, then PWA checks. Card order = by sector (AGO 04/11, option 1). Out of v1 (do not build, do not preclude): request an introduction, per-company stats,
+  index ✔, print ✔, PWA checks ✔ (docs/CHECKLIST-V1.md). Next: publish pipeline (sheet button → Action → Netlify). Card order = by sector (AGO 04/11, option 1). Out of v1 (do not build, do not preclude): request an introduction, per-company stats,
   "My selection" PDF, US fairs calendar, AI matchmaker.
 - Original photos are not in git (`media/`). Generated images in `public/img` are committed for now; the publish
   pipeline (sheet button → GitHub Action → Drive download → import → images → Netlify) is still to be built.
@@ -27,4 +27,7 @@ Handoff for Claude Code. Full documentation in README.md.
   buyers, US events, discover, signature, what they bring, legal name.
 - Print (04/11): `src/print-plan.ts` (pure, tests), `src/views/print.ts`, `src/styles/print.css`. If the card layout
   changes, check the worst case (every field at max length) in both formats: Single sheet is the tight one.
+- PWA/speed (04/11): `src/pwa.ts`; prerender draws cards and cover in the HTML (CSS inline, preloads) and the app
+  keeps that page on start (`data-prerendered`): views used by prerender must not touch the DOM at import time.
+  The data JSONs are precached (needed offline). Measure LCP with the real browser (scratch script), not only Lighthouse.
 - Every value from the sheet goes through `html``…`` (escaping) and links through `safeUrl()`.

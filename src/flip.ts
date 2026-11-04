@@ -58,8 +58,10 @@ export function preloadNeighbours(data: EditionData, index: number): void {
       img.srcset = Object.entries(info.web).map(([w, u]) => `${u} ${w}w`).join(', ');
     }
   };
-  if ('requestIdleCallback' in window) requestIdleCallback(run, { timeout: 2000 });
-  else setTimeout(run, 400);
+  // Only after the page has loaded: on slow connections it must not take bandwidth from the photo on screen.
+  const idle = () => ('requestIdleCallback' in window ? requestIdleCallback(run, { timeout: 3000 }) : setTimeout(run, 400));
+  if (document.readyState === 'complete') idle();
+  else window.addEventListener('load', idle, { once: true });
 }
 
 export function setupFlip(): void {

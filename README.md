@@ -82,6 +82,18 @@ page, 2 for premium), cover, **For the printer** (3 mm bleed + crop marks: page 
 - A card with every field at its maximum length fits both formats (tested with a synthetic card).
 - Browsers cannot write PDF TrimBox/BleedBox: the printer reads trim from the crop marks.
 
+## PWA and speed
+
+- Precache (service worker): app, fonts, card data and image manifest (≈ 375 KB). Photos are cached when seen;
+  at the first visit the photos on screen are requested again once the service worker takes control.
+  Offline, a photo never seen shows its dominant colour. Install button on the cover (`src/pwa.ts`):
+  browser prompt on Chrome/Edge/Android, instructions on iPhone/iPad.
+- `scripts/prerender.ts` writes each card page and the edition cover **already drawn**, with the CSS inline and
+  preloads for the photo and the data: the first card shows in ~0.5 s on 4G. The app keeps the pre-drawn page on
+  start (`data-prerendered`) and takes over from there.
+- Lighthouse mobile (04/11/2026): Performance 97–98, Accessibility 100, Best practices 100, SEO 100.
+- Test checklist and how to update the data: `docs/CHECKLIST-V1.md`.
+
 ## Analytics
 
 All events go through `track()` in `src/analytics.ts` (card_view, card_time, click_email, click_website,

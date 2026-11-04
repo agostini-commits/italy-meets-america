@@ -9,9 +9,9 @@ import './styles/flip.css';
 import './styles/index.css';
 import './styles/print.css';
 
-import { registerSW } from 'virtual:pwa-register';
 import { cardLeft, cardShown } from './analytics';
 import { preloadNeighbours, setupFlip, takeFlip, withTransition } from './flip';
+import { refreshInstallButtons, setupPwa } from './pwa';
 import { currentEdition, loadEdition, type EditionData } from './data';
 import { type Raw } from './lib/html';
 import { navigate, startRouter, url, type Route } from './router';
@@ -22,7 +22,7 @@ import { messageView, pageView } from './views/pages';
 import { mountPrint, printView } from './views/print';
 import { shell, type Section } from './views/shell';
 
-registerSW({ immediate: true });
+setupPwa();
 
 const app = document.getElementById('app')!;
 
@@ -52,9 +52,21 @@ document.addEventListener('click', (e) => {
 });
 
 // --- rendering -------------------------------------------------------------------
+/**
+ * Page already drawn by scripts/prerender.ts for this address: on the first render it is kept as it is
+ * (redrawing it would only delay the "largest contentful paint" on slow connections).
+ */
+let prerendered = app.dataset.prerendered ?? '';
 function show(edition: number, section: Section, content: Raw, title: string) {
   document.documentElement.dataset.edition = String(edition);
   document.title = title;
+  const here = location.pathname.replace(/\/+$/, '');
+  if (prerendered && prerendered === here) {
+    prerendered = '';
+    return;
+  }
+  prerendered = '';
+  delete app.dataset.prerendered;
   app.innerHTML = shell(edition, section, content).value;
   window.scrollTo({ top: 0, behavior: 'instant' });
 }
@@ -113,6 +125,7 @@ async function render(route: Route) {
         break;
     }
     // After a navigation, move focus to the content (screen readers), not on the first load.
+    refreshInstallButtons();
     if (!firstRender && !turn) document.getElementById('main')?.focus({ preventScroll: true });
     firstRender = false;
   } catch (e) {
