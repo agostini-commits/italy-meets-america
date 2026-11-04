@@ -88,10 +88,10 @@ ogni risposta diventa una riga di **Companies** in stato **draft**.
    mostra di nuovo i link).
 
 Come funziona:
-- Due parti (AGO 04/11): **1 · Dati generali** (nome, ragione sociale, sede su Google Maps, settore, anno, sito,
-  email, social, link a foto e logo, referente: li compila anche la segreteria in pochi minuti) e **2 · Il racconto
-  dell'azienda** (titolo, presentazione, mission, vision, citazione, buyer, prodotti, offerta: il marketing, in inglese,
-  circa 30 minuti). Limiti di caratteri controllati durante la compilazione.
+- Due parti (AGO 04/11), prima il racconto perché è quello che promette la slide: **1 · Il racconto dell'azienda**
+  (nome, presentazione, mission, vision, citazione, buyer, prodotti simbolo, offerta per l'America, titolo sulla foto,
+  eventi USA: il marketing, in inglese, circa 30 minuti) e **2 · Dati pratici** (ragione sociale, sede su Google Maps,
+  settore, anno, sito, email, social, link a foto e logo, referente, autorizzazione: pochi minuti). Limiti di caratteri controllati durante la compilazione.
 - **Indirizzo da Google Maps**: l'azienda incolla il link della sede (Maps → Condividi → Copia link). Lo script segue il
   link corto, legge le coordinate (o il nome del luogo) e chiede a Google Maps via, CAP, città (in inglese), provincia e
   regione (portata ai nomi di `Lists`). Se il link non si legge la riga nasce lo stesso, con una nota in `_internal_notes`.
