@@ -1,0 +1,55 @@
+/*
+ * Flipbook controls.
+ * Mobile/tablet: fixed bar at the bottom (arrows 48 px + position + progress line).
+ * Desktop: round arrows beside the spread, position and progress above the bottom of the window.
+ * Turning a card slides it (View Transitions), unless the reader prefers reduced motion.
+ */
+.flipbook { padding-bottom: calc(64px + env(safe-area-inset-bottom)); }
+.flip { position: fixed; z-index: 4; left: 0; right: 0; bottom: 0; display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 8px;
+  padding: 6px max(8px, env(safe-area-inset-left)) calc(6px + env(safe-area-inset-bottom)) max(8px, env(safe-area-inset-right));
+  background: var(--ui-bar); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-top: 1px solid var(--ui-line); }
+.flip-btn { display: inline-flex; align-items: center; justify-content: center; width: 48px; height: 48px; border-radius: 50%; color: var(--ui-fg); text-decoration: none; }
+.flip-btn:hover { background: color-mix(in srgb, var(--ui-fg) 8%, transparent); }
+.flip-btn-name { display: none; }
+.flip-pos { display: grid; justify-items: center; gap: 6px; min-width: 0; }
+.flip-count { font: 500 13px/1.2 var(--sans); font-variant-numeric: tabular-nums; color: var(--ui-fg); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+.flip-sector { color: var(--ui-muted); }
+.flip-bar { width: min(220px, 100%); height: 2px; background: var(--ui-line); border-radius: 2px; overflow: hidden; }
+.flip-bar span { display: block; height: 100%; background: var(--gold); }
+
+/* swipe feedback: the card follows the finger a little */
+.flipbook .card { touch-action: pan-y; }
+.card.is-dragging { transition: none; }
+.card.is-settling { transition: transform .25s ease, opacity .25s ease; }
+
+@media (min-width: 900px) {
+  .flipbook { padding-bottom: 24px; }
+  .flip { position: static; display: block; background: none; border: 0; backdrop-filter: none; -webkit-backdrop-filter: none; padding: 0; }
+  /* position in the middle of the header bar: it never covers the card */
+  .flip-pos { position: fixed; z-index: 6; left: 50%; top: 0; height: 56px; align-content: center; transform: translateX(-50%); }
+  .flip-bar { width: 200px; }
+  /* Arrows beside the spread; on narrow desktops they sit on the edge of the spread. */
+  .flip-btn { position: fixed; top: 50%; z-index: 4; width: 56px; height: 56px; transform: translateY(-50%);
+    background: var(--ui-bar); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid var(--ui-line); box-shadow: 0 4px 18px rgb(0 0 0 / .14); }
+  .flip-prev { left: max(10px, calc((100vw - var(--spread-w)) / 2 - 76px)); }
+  .flip-next { right: max(10px, calc((100vw - var(--spread-w)) / 2 - 76px)); }
+  .flip-btn:hover { background: var(--ui-fg); color: var(--ui-bg); }
+  /* the name of the next/previous company appears on hover */
+  .flip-btn-name { display: block; position: absolute; top: calc(100% + 8px); left: 50%; transform: translateX(-50%); white-space: nowrap;
+    font: 500 12px var(--sans); color: var(--ui-muted); opacity: 0; transition: opacity .15s; pointer-events: none; }
+  .flip-btn:hover .flip-btn-name, .flip-btn:focus-visible .flip-btn-name { opacity: 1; }
+}
+
+/* --- page turn ------------------------------------------------------------------ */
+@media (prefers-reduced-motion: no-preference) {
+  .flipbook .card { view-transition-name: ima-card; }
+  ::view-transition-old(root), ::view-transition-new(root) { animation: none; }
+  ::view-transition-old(ima-card) { animation: ima-out .28s cubic-bezier(.4, 0, .2, 1) both; }
+  ::view-transition-new(ima-card) { animation: ima-in .32s cubic-bezier(.2, 0, 0, 1) both; }
+  html[data-flip='prev']::view-transition-old(ima-card) { animation-name: ima-out-prev; }
+  html[data-flip='prev']::view-transition-new(ima-card) { animation-name: ima-in-prev; }
+}
+@keyframes ima-out { to { transform: translateX(-12%); opacity: 0; } }
+@keyframes ima-in { from { transform: translateX(12%); opacity: 0; } }
+@keyframes ima-out-prev { to { transform: translateX(12%); opacity: 0; } }
+@keyframes ima-in-prev { from { transform: translateX(-12%); opacity: 0; } }

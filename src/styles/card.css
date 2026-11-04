@@ -1,0 +1,189 @@
+/*
+ * Company card. Always "paper", in both interface themes.
+ * Mobile first (designed on 390 px, 360–430): photo 4:5 with text over it, then the blocks stacked.
+ * Tablet 600–899: same structure, more space. Desktop (≥ 900): spread 297:210 (next step).
+ */
+.card {
+  --pad: 20px;
+  --rule: 1px solid var(--paper-line);
+  background: var(--paper);
+  color: var(--ink);
+  font: 16px/1.5 var(--sans);
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* --- photo with sector, headline and footer over it --------------------------- */
+.card-photo { position: relative; aspect-ratio: 4 / 5; background: var(--forbes-green); overflow: hidden; isolation: isolate; }
+.card-photo-img { width: 100%; height: 100%; object-fit: cover; }
+.card-photo::after { content: ''; position: absolute; inset: 0; z-index: 0;
+  background: linear-gradient(to bottom, rgb(0 0 0 / 0) 42%, rgb(0 0 0 / .35) 62%, rgb(0 0 0 / .78) 100%); }
+.card-photo-text { position: absolute; inset: auto 0 0; z-index: 1; color: #fff; padding: 0 var(--pad) 20px; }
+.card-sector { margin: 0; font: 600 11px/1.3 var(--sans); letter-spacing: .14em; text-transform: uppercase; }
+.card-headline { margin: 6px 0 18px; font: 700 clamp(36px, 9.6vw, 40px)/1.02 var(--serif); letter-spacing: -.01em; text-wrap: balance; }
+.card-footer { margin: 0; font: 500 11px/1.3 var(--sans); letter-spacing: .1em; text-transform: uppercase; opacity: .9; }
+.card-credit { position: absolute; z-index: 1; top: 8px; right: 10px; margin: 0; font: 10px var(--sans); color: rgb(255 255 255 / .85); }
+.img-missing { width: 100%; height: 100%; background: var(--forbes-green-2); }
+
+/* --- text --------------------------------------------------------------------- */
+.card-body { padding: 26px var(--pad) 40px; }
+.card-head { display: flex; align-items: center; gap: 16px; padding-bottom: 18px; border-bottom: var(--rule); }
+.card-logo { flex: 0 0 auto; width: 84px; }
+.card-logo img { width: 100%; height: auto; max-height: 64px; object-fit: contain; background: none !important; }
+.card-id { min-width: 0; }
+.card-name { margin: 0; font: 700 34px/1.05 var(--serif); letter-spacing: -.01em; overflow-wrap: anywhere; }
+.card-place { margin: 6px 0 0; font: 400 13px/1.3 var(--sans); letter-spacing: .06em; text-transform: uppercase; color: var(--ink-2); }
+
+.card-intro { margin: 20px 0 22px; hyphens: auto; hyphenate-limit-chars: 10 5 5; }
+.card-intro::first-letter { float: left; font: 700 4.1em/.78 var(--serif); margin: 5px 9px 0 -2px; color: var(--ink); }
+.card-intro strong { font-weight: 700; }
+
+.card-label, .card-facts-label { margin: 0; font: 600 11px/1.3 var(--sans); letter-spacing: .12em; text-transform: uppercase; }
+.card-label { color: var(--gold-text); }
+
+.card-mv { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 0; padding: 18px 0; border-block: var(--rule); }
+.card-mv dd { margin: 6px 0 0; font-size: 15px; line-height: 1.4; }
+
+.card-voice { display: grid; gap: 22px; padding: 22px 0; border-bottom: var(--rule); }
+.card-quote { margin: 0; }
+.card-quote blockquote { margin: 0; }
+.card-quote blockquote p { margin: 0; font: italic 700 27px/1.18 var(--serif); letter-spacing: -.01em; text-wrap: balance; }
+.card-quote figcaption { margin-top: 12px; font-size: 14px; color: var(--ink-2); }
+.card-connect { display: grid; gap: 16px; margin: 0; }
+.card-tag { display: inline-block; padding: 5px 10px; background: var(--paper-tag); color: var(--ink); font: 500 11px/1.3 var(--sans); letter-spacing: .1em; text-transform: uppercase; }
+.card-connect dd { margin: 8px 0 0; font-size: 15px; line-height: 1.45; }
+
+/* Since + Signature: two boxes side by side */
+.card-facts { display: grid; grid-template-columns: minmax(96px, auto) 1fr; gap: 10px; padding: 22px 0 6px; }
+.card-since, .card-signature { border: var(--rule); padding: 12px 10px 14px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.card-year { display: block; margin-top: 4px; font: 700 44px/1 var(--serif); letter-spacing: -.02em; }
+.card-signature ul { list-style: none; margin: 8px 0 0; padding: 0; width: 100%; display: grid; grid-template-columns: repeat(var(--n, 1), minmax(0, 1fr)); }
+.card-signature li { padding: 2px 8px; font: 700 14px/1.25 var(--serif); overflow-wrap: anywhere; }
+.card-signature li + li { border-left: var(--rule); }
+/* Three signatures do not fit side by side on small phones: one per row. */
+@media (max-width: 419px) {
+  .card-signature ul { grid-template-columns: 1fr; gap: 0; }
+  .card-signature li { padding: 6px 4px; }
+  .card-signature li + li { border-left: 0; border-top: var(--rule); }
+}
+
+.card-section { padding-top: 24px; }
+.card-rule { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+.card-rule::after { content: ''; flex: 1; height: 1px; background: var(--paper-line); }
+.card-section p { margin: 0; font-size: 15px; line-height: 1.5; }
+
+.card-events { list-style: none; margin: 0; padding: 0; }
+.card-events li { border-bottom: 1px solid var(--paper-tag); }
+.card-events a, .card-events span { display: flex; align-items: center; min-height: 44px; padding: 6px 0; font-size: 15px; line-height: 1.3; }
+.card a { color: var(--ink); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+.card a:hover { color: var(--gold-text); }
+
+.card-contacts-grid { display: grid; gap: 10px; font-size: 14px; line-height: 1.45; }
+.card-contacts address { font-style: normal; }
+.card-links { list-style: none; margin: 0; padding: 0; }
+.card-links a { display: inline-flex; align-items: center; min-height: 44px; overflow-wrap: anywhere; }
+.card-social { list-style: none; display: flex; flex-wrap: wrap; gap: 10px; margin: 10px 0 0; padding: 0; }
+.card-social a { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; background: #77726a; color: #fff; text-decoration: none; }
+.card-social a:hover { background: var(--forbes-green); color: #fff; }
+
+.card-gallery { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.card-gallery img { width: 100%; aspect-ratio: 1; object-fit: cover; }
+
+/* --- tablet: same structure, more space ---------------------------------------- */
+@media (min-width: 600px) and (max-width: 899px) {
+  .card { --pad: 48px; font-size: 17px; }
+  .card-photo { aspect-ratio: 4 / 5; max-height: 88svh; width: 100%; }
+  .card-headline { font-size: clamp(44px, 7vw, 56px); }
+  .card-body { max-width: 720px; margin: 0 auto; padding-top: 36px; }
+  .card-name { font-size: 42px; }
+  .card-voice { grid-template-columns: 1.1fr 1fr; align-items: start; gap: 32px; }
+  .card-contacts-grid { grid-template-columns: 1fr 1fr; }
+  .card-gallery { grid-template-columns: repeat(3, 1fr); }
+}
+
+/* --- desktop (≥ 900 px): spread 297:210, photo left (36–50%), text right ---------------------
+ * Decision AGO 04/11 (option 1): photo 38% / text 62% (like the "Single sheet" print), text 13–16 px.
+ * On screens ≥ ~1050 px tall the spread fits at 297:210; on laptops it grows a little taller (short scroll).
+ * Every size derives from --u = text size, which scales with the spread width (container query
+ * units) between 13 and 16 px. If a long card does not fit, the spread grows taller instead of
+ * cutting the text, and the photo stays in view (sticky).
+ */
+@media (min-width: 900px) {
+  :root { --spread-w: min(1400px, 100vw - 64px, max((100svh - 150px) * 297 / 210, 1150px)); }
+  .card {
+    --u: clamp(13px, 1.12cqi, 16px);
+    --pad-x: 3cqi;
+    --pad-y: 2.2cqi;
+    /* Fits the screen height when possible; never narrower than 1150 px (where a card at 13 px is
+       shortest, ~840 px: measured on the 2026 sample cards), never wider than the window or 1400 px. */
+    width: var(--spread-w);
+    margin: 24px auto;
+    display: grid;
+    grid-template-columns: 38fr 62fr;
+    aspect-ratio: 297 / 210;
+    container-type: inline-size;
+    box-shadow: 0 1px 2px rgb(0 0 0 / .08), 0 18px 50px rgb(0 0 0 / .22);
+    font-size: var(--u);
+  }
+  .card-photo { aspect-ratio: auto; height: 100%; min-height: 0; }
+  .card-photo-img { position: absolute; inset: 0; }
+  .card-photo-text { padding: 0 2.4cqi var(--pad-y); }
+  .card-sector { font-size: max(10px, calc(var(--u) * .78)); }
+  .card-headline { font-size: clamp(34px, 3.9cqi, 56px); margin: .15em 0 .45em; }
+  .card-footer { font-size: max(10px, calc(var(--u) * .74)); }
+
+  .card-body { padding: var(--pad-y) var(--pad-x); line-height: 1.45; display: flex; flex-direction: column; box-shadow: inset 14px 0 18px -16px rgb(0 0 0 / .28); }
+  .card-head { gap: 1.6cqi; padding-bottom: calc(var(--u) * 1.1); }
+  .card-logo { width: 7.5cqi; }
+  .card-logo img { max-height: 5cqi; }
+  .card-name { font-size: calc(var(--u) * 2.75); }
+  .card-place { font-size: calc(var(--u) * .9); margin-top: .3em; }
+
+  .card-intro { margin: calc(var(--u) * 1.1) 0; font-size: var(--u); line-height: 1.5; text-align: justify; hyphens: auto; }
+  .card-intro::first-letter { font-size: 3.55em; margin: .1em .14em 0 -.05em; }
+
+  .card-label, .card-facts-label { font-size: max(10px, calc(var(--u) * .74)); }
+  .card-mv { padding: calc(var(--u) * .9) 0; gap: 2.4cqi; }
+  .card-mv dd, .card-connect dd, .card-section p { font-size: calc(var(--u) * .92); margin-top: .35em; }
+
+  .card-voice { grid-template-columns: 1.05fr 1fr; gap: 2.4cqi; padding: calc(var(--u) * 1.1) 0; align-items: start; }
+  .card-quote blockquote p { font-size: calc(var(--u) * 1.75); line-height: 1.14; }
+  .card-quote figcaption { font-size: calc(var(--u) * .86); margin-top: .9em; }
+  .card-connect { gap: calc(var(--u) * .8); }
+  .card-tag { font-size: max(10px, calc(var(--u) * .72)); }
+
+  .card-facts { grid-template-columns: minmax(0, .42fr) 1fr; gap: 1.2cqi; padding: calc(var(--u) * 1.1) 0 0; }
+  .card-since, .card-signature { padding: calc(var(--u) * .6) calc(var(--u) * .5) calc(var(--u) * .75); }
+  .card-year { font-size: calc(var(--u) * 2.7); }
+  .card-signature ul { grid-template-columns: repeat(var(--n, 1), minmax(0, 1fr)); margin-top: .5em; }
+  .card-signature li { font-size: calc(var(--u) * .9); padding: 0 .5em; }
+  .card-signature li + li { border-left: var(--rule); border-top: 0; }
+
+  .card-section { padding-top: calc(var(--u) * 1.15); }
+  .card-rule { margin-bottom: .5em; }
+
+  /* US events on one line, separated by a vertical bar, as in the PDF */
+  .card-events { display: flex; flex-wrap: wrap; align-items: center; }
+  .card-events li { border: 0; display: flex; align-items: center; }
+  .card-events li + li::before { content: '|'; margin: 0 .8em; color: var(--ink-2); }
+  .card-events a, .card-events span { min-height: 32px; padding: 0; font-size: calc(var(--u) * .92); }
+
+  .card-contacts-grid { grid-template-columns: 1fr 1fr; gap: 2cqi; font-size: calc(var(--u) * .86); line-height: 1.4; }
+  .card-links a { min-height: 0; padding: .1em 0; }
+  .card-contacts { display: grid; grid-template-columns: 1fr auto; column-gap: 1.6cqi; align-items: end; }
+  .card-contacts .card-rule { grid-column: 1 / -1; }
+  .card-social { margin: 0; gap: .5cqi; justify-content: flex-end; }
+  .card-social a { width: 2.6cqi; height: 2.6cqi; min-width: 30px; min-height: 30px; }
+  .card-social svg { width: 55%; height: 55%; }
+
+  .card-gallery { grid-template-columns: repeat(3, 1fr); }
+
+  /* the last block sits at the bottom of the page, like the printed card */
+  .card-contacts { margin-top: auto; }
+}
+
+
+/* Justified text only when the column is wide enough: on narrow spreads it opens gaps between words. */
+@container (max-width: 1099px) {
+  .card-intro { text-align: left; }
+}

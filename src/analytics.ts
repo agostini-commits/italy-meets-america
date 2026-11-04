@@ -39,10 +39,11 @@ export function track(name: AnalyticsEvent, props: Props = {}): void {
 /** Time on card: starts on show, sent on leave (route change, tab hidden, page closed). */
 let current: { id: string; start: number } | null = null;
 
-export function cardShown(id: string): void {
+/** via: how the reader got to the card (link, button, key, swipe): tells us how people browse. */
+export function cardShown(id: string, via = 'link'): void {
   cardLeft();
   current = { id, start: performance.now() };
-  track('card_view', { company: id });
+  track('card_view', { company: id, via });
 }
 
 export function cardLeft(): void {

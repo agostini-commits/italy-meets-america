@@ -1,7 +1,7 @@
 *, *::before, *::after { box-sizing: border-box; }
 html { -webkit-text-size-adjust: 100%; }
 body { margin: 0; background: var(--ui-bg); color: var(--ui-fg); font: 16px/1.5 var(--sans); overflow-x: hidden; }
-img { max-width: 100%; display: block; }
+img { max-width: 100%; height: auto; display: block; }
 a { color: inherit; }
 :focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
 .skip-link { position: absolute; left: -9999px; top: 8px; z-index: 10; background: var(--forbes-green); color: #fff; padding: 10px 14px; }
@@ -44,68 +44,17 @@ main:focus { outline: none; }
 .toc-name { font: 700 20px var(--serif); }
 .toc-city { color: var(--ui-muted); font-size: 14px; }
 
-/* --- card (paper in both themes) ------------------------------------------ */
-.card { background: var(--paper); color: var(--ink); max-width: 1400px; margin: 0 auto; }
-.card-photo { position: relative; aspect-ratio: 4 / 5; background: var(--forbes-green); overflow: hidden; }
-.card-photo-img { width: 100%; height: 100%; object-fit: cover; }
-.card-photo::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to bottom, transparent 45%, rgb(0 0 0 / .72)); }
-.card-photo-text { position: absolute; inset: auto 0 0; z-index: 1; color: #fff; padding: 0 var(--gutter) 18px; }
-.card-headline { font: 700 clamp(36px, 10vw, 40px)/1.05 var(--serif); margin: 6px 0 14px; text-wrap: balance; }
-.card-footer { font: 500 11px var(--sans); letter-spacing: .08em; text-transform: uppercase; opacity: .85; margin: 0; }
-.card-body { padding: 24px var(--gutter) 32px; }
-.card-head { display: flex; gap: 16px; align-items: center; padding-bottom: 18px; border-bottom: 1px solid var(--paper-line); }
-.card-logo { width: 96px; height: auto; }
-.card-name { font: 700 34px/1.05 var(--serif); margin: 0; }
-.card-place { margin: 4px 0 0; font-size: 14px; letter-spacing: .04em; text-transform: uppercase; color: var(--ink-2); }
-.card-intro { margin: 18px 0; }
-.card-intro::first-letter { float: left; font: 700 3.6em/0.8 var(--serif); padding: 6px 8px 0 0; }
-.card-mv { display: grid; gap: 14px; margin: 0; padding: 16px 0; border-block: 1px solid var(--paper-line); }
-.card-mv dd, .card-connect dd { margin: 4px 0 0; }
-.card-mv dt, .card-block .label { color: var(--gold-text); }
-.card-quote-row { display: grid; gap: 18px; padding: 20px 0; border-bottom: 1px solid var(--paper-line); }
-.card-quote { margin: 0; }
-.card-quote blockquote { margin: 0; font: italic 700 26px/1.2 var(--serif); }
-.card-quote blockquote::before { content: '\201C'; } .card-quote blockquote::after { content: '\201D'; }
-.card-quote figcaption { margin-top: 10px; font-size: 14px; color: var(--ink-2); }
-.card-connect { margin: 0; }
-.tag { display: inline-block; background: var(--paper-tag); font: 500 11px var(--sans); letter-spacing: .08em; text-transform: uppercase; padding: 5px 10px; margin-top: 12px; }
-.card-since-row { display: grid; grid-template-columns: auto 1fr; gap: 12px; padding: 20px 0; }
-.card-since, .card-signature { border: 1px solid var(--paper-line); padding: 12px 16px; text-align: center; }
-.card-year { display: block; font: 700 40px/1 var(--serif); }
-.card-signature ul { list-style: none; margin: 6px 0 0; padding: 0; display: grid; gap: 6px; font: 700 15px/1.25 var(--serif); }
-.card-block { padding-top: 18px; }
-.rule { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
-.rule::after { content: ''; flex: 1; height: 1px; background: var(--paper-line); }
-.card-block p { margin: 0; }
-.card-events { list-style: none; margin: 0; padding: 0; }
-.card-events a, .card-contacts a, .card-social a { display: inline-flex; align-items: center; min-height: var(--tap); }
-.card-contacts address { font-style: normal; margin-bottom: 8px; }
-.card-social { list-style: none; display: flex; flex-wrap: wrap; gap: 0 16px; margin: 0; padding: 0; }
-.card-gallery { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-.img-missing { background: var(--forbes-green-2); width: 100%; height: 100%; }
-
-/* --- flipbook --------------------------------------------------------------- */
-.flip { position: sticky; bottom: 0; display: flex; justify-content: space-between; align-items: center; padding: 8px var(--gutter);
-  background: var(--ui-bar); backdrop-filter: blur(10px); border-top: 1px solid var(--ui-line); }
-.flip-btn { min-width: var(--tap); min-height: var(--tap); display: inline-flex; align-items: center; justify-content: center; font-size: 22px; text-decoration: none; border-radius: 50%; }
-.flip-pos { font: 500 14px var(--sans); font-variant-numeric: tabular-nums; }
-
 /* --- index ------------------------------------------------------------------ */
-.index-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 20px; }
+.index-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 16px; }
+@media (min-width: 600px) { .index-grid { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 32px 24px; } }
 .index-item { display: grid; gap: 4px; text-decoration: none; }
-.index-img { aspect-ratio: 4 / 5; object-fit: cover; width: 100%; margin-bottom: 6px; }
+.index-item:hover .index-name { text-decoration: underline; text-underline-offset: 3px; }
+.index-item .label { color: var(--ui-muted); }
+.index-img { aspect-ratio: 4 / 5; object-fit: cover; width: 100%; height: auto; margin-bottom: 6px; }
 .index-name { font: 700 19px/1.15 var(--serif); }
 .index-city { font-size: 14px; color: var(--ui-muted); }
 
-/* --- desktop: spread 297:210, photo left, text right ---------------------- */
-@media (min-width: 900px) {
-  .card { display: grid; grid-template-columns: 1fr 1fr; aspect-ratio: 297 / 210; container-type: inline-size; margin: 24px auto; box-shadow: 0 10px 40px rgb(0 0 0 / .18); }
-  .card-photo { aspect-ratio: auto; height: 100%; }
-  .card-body { overflow: auto; font-size: clamp(13px, 1.15cqi, 16px); padding: 3cqi 3.5cqi; }
-  .card-name { font-size: 3.2cqi; }
-  .card-headline { font-size: 4.2cqi; }
-  .card-mv, .card-quote-row { grid-template-columns: 1fr 1fr; }
-}
-
 @media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
 @media print { .no-print { display: none !important; } body { background: #fff; } }
+
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }

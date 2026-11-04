@@ -4,9 +4,12 @@ import '@fontsource/playfair-display/700.css';
 import '@fontsource/playfair-display/700-italic.css';
 import './styles/tokens.css';
 import './styles/base.css';
+import './styles/card.css';
+import './styles/flip.css';
 
 import { registerSW } from 'virtual:pwa-register';
 import { cardLeft, cardShown } from './analytics';
+import { preloadNeighbours, setupFlip, takeFlip, withTransition } from './flip';
 import { currentEdition, loadEdition, type EditionData } from './data';
 import { type Raw } from './lib/html';
 import { navigate, startRouter, url, type Route } from './router';
@@ -50,12 +53,13 @@ function show(edition: number, section: Section, content: Raw, title: string) {
   document.documentElement.dataset.edition = String(edition);
   document.title = title;
   app.innerHTML = shell(edition, section, content).value;
-  window.scrollTo(0, 0);
+  window.scrollTo({ top: 0, behavior: 'instant' });
 }
 
 let firstRender = true;
 async function render(route: Route) {
   cardLeft();
+  const turn = takeFlip();
   try {
     if (route.name === 'home') {
       const ed = await currentEdition();
@@ -82,9 +86,15 @@ async function render(route: Route) {
           show(ed, 'company', messageView('Company not found', 'This card is not in the yearbook.'), base);
           break;
         }
-        const c = data.companies.find((x) => x.id === route.id)!;
-        show(ed, 'company', view, `${c.name} – ${base} | Forbes Italia`);
-        cardShown(c.id);
+        const index = data.companies.findIndex((x) => x.id === route.id);
+        const c = data.companies[index];
+        withTransition(turn?.dir ?? null, () => {
+          show(ed, 'company', view, `${c.name} – ${base} | Forbes Italia`);
+          // Keyboard users keep the focus on the button they pressed.
+          if (turn?.via === 'button') document.querySelector<HTMLElement>(`.flip-${turn.dir}`)?.focus({ preventScroll: true });
+        });
+        cardShown(c.id, turn?.via ?? 'link');
+        preloadNeighbours(data, index);
         break;
       }
       case 'companies':
@@ -98,7 +108,7 @@ async function render(route: Route) {
         break;
     }
     // After a navigation, move focus to the content (screen readers), not on the first load.
-    if (!firstRender) document.getElementById('main')?.focus({ preventScroll: true });
+    if (!firstRender && !turn) document.getElementById('main')?.focus({ preventScroll: true });
     firstRender = false;
   } catch (e) {
     console.error(e);
@@ -106,32 +116,6 @@ async function render(route: Route) {
   }
 }
 
-// --- flipbook: keyboard and swipe --------------------------------------------------
-function flip(dir: 'prev' | 'next') {
-  const a = document.querySelector<HTMLAnchorElement>(`[data-flip="${dir}"]`);
-  if (a) navigate(a.getAttribute('href')!);
-}
-document.addEventListener('keydown', (e) => {
-  if (e.altKey || e.ctrlKey || e.metaKey) return;
-  const t = e.target as HTMLElement;
-  if (t.closest('input, textarea, select, [contenteditable]')) return;
-  if (e.key === 'ArrowLeft') flip('prev');
-  if (e.key === 'ArrowRight') flip('next');
-});
-let touch: { x: number; y: number; t: number } | null = null;
-document.addEventListener('touchstart', (e) => {
-  const p = e.changedTouches[0];
-  touch = { x: p.clientX, y: p.clientY, t: Date.now() };
-}, { passive: true });
-document.addEventListener('touchend', (e) => {
-  if (!touch || !document.querySelector('.card')) return;
-  const p = e.changedTouches[0];
-  const dx = p.clientX - touch.x;
-  const dy = p.clientY - touch.y;
-  // Horizontal, decisive and quick: the vertical scroll of the card is never taken as a swipe.
-  if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5 && Date.now() - touch.t < 600) flip(dx < 0 ? 'next' : 'prev');
-  touch = null;
-}, { passive: true });
-
 window.addEventListener('pagehide', cardLeft);
+setupFlip();
 startRouter((route) => void render(route));

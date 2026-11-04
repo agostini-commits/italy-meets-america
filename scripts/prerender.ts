@@ -13,7 +13,7 @@ import type { Company, Edition, ImageInfo } from '../src/types';
 
 const ROOT = new URL('..', import.meta.url).pathname;
 const DIST = join(ROOT, 'dist');
-const SITE = (process.env.SITE_URL ?? process.env.URL ?? 'https://italymeetsamerica.netlify.app').replace(/\/$/, '');
+const SITE = (process.env.SITE_URL ?? process.env.URL ?? 'https://italy-meets-america.netlify.app').replace(/\/$/, '');
 
 const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 const cut = (s: string, n: number) => (s.length <= n ? s : s.slice(0, n - 1).replace(/\s+\S*$/, '') + '…');
