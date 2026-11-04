@@ -102,7 +102,8 @@
 }
 
 /* --- desktop (≥ 900 px): spread 297:210, photo left (36–50%), text right ---------------------
- * The spread fits the screen height (header + page bar + margins = 150 px), max 1400 px wide.
+ * Decision AGO 04/11 (option 1): photo 38% / text 62% (like the "Single sheet" print), text 13–16 px.
+ * On screens ≥ ~1050 px tall the spread fits at 297:210; on laptops it grows a little taller (short scroll).
  * Every size derives from --u = text size, which scales with the spread width (container query
  * units) between 13 and 16 px. If a long card does not fit, the spread grows taller instead of
  * cutting the text, and the photo stays in view (sticky).
@@ -112,7 +113,9 @@
     --u: clamp(13px, 1.12cqi, 16px);
     --pad-x: 3cqi;
     --pad-y: 2.2cqi;
-    width: min(1400px, 100% - 64px, (100svh - 150px) * 297 / 210);
+    /* Fits the screen height when possible; never narrower than 1150 px (where a card at 13 px is
+       shortest, ~840 px: measured on the 2026 sample cards), never wider than the window or 1400 px. */
+    width: min(1400px, 100% - 64px, max((100svh - 150px) * 297 / 210, 1150px));
     margin: 24px auto;
     display: grid;
     grid-template-columns: 38fr 62fr;
@@ -178,7 +181,8 @@
   .card-contacts { margin-top: auto; }
 }
 
-/* Wide screens: when the spread is limited by the height, keep it centred with air around it. */
-@media (min-width: 900px) and (max-height: 640px) {
-  .card { width: min(1400px, 100% - 64px); }
+
+/* Justified text only when the column is wide enough: on narrow spreads it opens gaps between words. */
+@container (max-width: 1099px) {
+  .card-intro { text-align: left; }
 }
