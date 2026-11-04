@@ -1,11 +1,11 @@
 /**
  * Italy meets America – Google Form for the companies (data intake).
  *
- * Two parts (decision AGO 04/11):
- *   Part 1 · General data   – an assistant can fill it in a few minutes (name, Google Maps link of the
- *                             headquarters, website, emails, social, photo link, contact person).
- *   Part 2 · Company story  – the marketing team, in English, max 30 minutes (presentation, mission,
- *                             vision, quote, buyers, signature products, offer for America).
+ * Two parts (decision AGO 04/11, story first: it is what the slide promises):
+ *   Part 1 · Company story  – the marketing team, in English, max 30 minutes (name, presentation, mission,
+ *                             vision, quote, buyers, signature products, offer for America, title on the photo).
+ *   Part 2 · Practical data – a few minutes (legal name, Google Maps link of the headquarters, sector,
+ *                             website, emails, social, photo link, contact person, consent).
  * The address is NOT typed: the company pastes the Google Maps link of its headquarters and the script
  * reads street, postcode, city (in English), province and region from Google Maps (no typos).
  *
@@ -81,10 +81,30 @@ function imaBuildItems_(form, sectors) {
     return it;
   };
 
-  // --- Part 1: general data (assistant, a few minutes) ---------------------------------------------
-  form.addSectionHeaderItem().setTitle('Parte 1 · Dati generali')
-    .setHelpText('Informazioni pratiche: le può compilare anche la segreteria, in pochi minuti.');
+  // --- Part 1: the company story (marketing, in English, about 30 minutes): what the slide promises ---
+  form.addSectionHeaderItem().setTitle("Parte 1 · Il racconto dell'azienda – in English")
+    .setHelpText('Circa 30 minuti. Il pubblico è americano, quindi i testi vanno in inglese. ' +
+      'I limiti di caratteri servono a far stare la scheda nella pagina. Gli esempi vengono dalla scheda Bellavista.');
   short(Q.name, 'Come deve comparire nel titolo della scheda. Es. Bellavista', 60, true);
+  long(Q.intro, 'Max ' + M.intro + ' characters. History, territory, craftsmanship. Ex. Founded in 1977 in Erbusco, nestled in the rolling hills of Franciacorta…', M.intro, true);
+  short(Q.bold, 'Copy here, exactly as written above, the ONE sentence of the presentation to print in bold. Ex. Every bottle embodies the uncompromised craftsmanship of Made in Italy', 300, false);
+  short(Q.mission, 'Max ' + M.mission + '. Ex. Artisanal Excellence & Terroir', M.mission, true);
+  short(Q.vision, 'Max ' + M.vision + '. Ex. The Global Benchmark for Metodo Classico', M.vision, true);
+  short(Q.quote, 'Max ' + M.quote + ', without quotation marks. Ex. Wine is the art of listening to the land and letting time do its work.', M.quote, true);
+  short(Q.quoteAuthor, 'Ex. Vittorio Moretti', 60, true);
+  short(Q.quoteRole, 'Ex. Founder', 60, false);
+  short(Q.who, 'Max ' + M.who + '. The ideal American buyer or partner. Ex. Sommeliers, fine wine buyers & hospitality directors.', M.who, true);
+  short(Q.discover, 'Max ' + M.discover + '. Ex. Metodo Classico Franciacorta cuvées.', M.discover, true);
+  short(Q.sig1, 'Max ' + M.signature + '. Signature product or line. Ex. Alma Grande Cuvée', M.signature, true);
+  short(Q.sig2, 'Max ' + M.signature, M.signature, false);
+  short(Q.sig3, 'Max ' + M.signature, M.signature, false);
+  long(Q.bring, 'Max ' + M.bring + '. Your offer for the American market. Ex. The pinnacle of Italian Metodo Classico sparkling wines…', M.bring, true);
+  short(Q.headline, 'Max ' + M.headline + ' characters. Ex. The Art of Time', M.headline, true);
+  long(Q.events, 'Up to 4 US fairs, events or stores, ONE PER LINE, with the link if any. Ex.\nVinitaly USA | https://www.vinitalyusa.com\nFood & Wine Classic in Aspen', 600, false);
+
+  // --- Part 2: practical data (a few minutes; an assistant can help) --------------------------------
+  form.addPageBreakItem().setTitle('Parte 2 · Dati pratici')
+    .setHelpText('Pochi minuti: sede, sito, contatti, foto. Indirizzo e città li prendiamo da Google Maps.');
   short(Q.legal, 'Es. Società agricola Bellavista S.R.L', 120, true);
   url(Q.maps, "Cercate l'azienda su Google Maps → Condividi → Copia link, e incollatelo qui. " +
     'Indirizzo, città e regione li prendiamo da Google Maps, senza errori di battitura.', true);
@@ -102,32 +122,12 @@ function imaBuildItems_(form, sectors) {
   url(Q.youtube, 'Facoltativo', false);
   url(Q.whatsapp, 'Facoltativo. Es. https://wa.me/39…', false);
   url(Q.photosLink, 'Link WeTransfer, Dropbox o Google Drive con: una foto VERTICALE di almeno 2600 × 3600 pixel senza scritte, ' +
-    'il logo (SVG o PNG trasparente) e, per il pacchetto Premium, fino a 6 foto per la galleria. File originali, non screenshot.', true);
+    'il logo (SVG o PNG trasparente) e, se il vostro pacchetto prevede il portfolio, le foto aggiuntive. File originali, non screenshot.', true);
   short(Q.photoCredit, 'Da citare se richiesto. Es. © Mario Rossi', 80, false);
   short(Q.contactName, 'Chi approva la bozza della scheda (non sarà pubblicato).', 80, true);
   short(Q.contactRole, '', 80, false);
   form.addTextItem().setTitle(Q.contactEmail).setHelpText('Riceverà la bozza da approvare (non sarà pubblicata).').setRequired(true)
     .setValidation(FormApp.createTextValidation().requireTextIsEmail().build());
-
-  // --- Part 2: the company story (marketing, in English, max 30 minutes) ---------------------------
-  form.addPageBreakItem().setTitle('Parte 2 · Il racconto dell\'azienda – in English')
-    .setHelpText('Per il marketing: circa 30 minuti. Il pubblico è americano, quindi i testi vanno in inglese. ' +
-      'I limiti di caratteri servono a far stare la scheda nella pagina. Gli esempi vengono dalla scheda Bellavista.');
-  short(Q.headline, 'Max ' + M.headline + ' characters. Ex. The Art of Time', M.headline, true);
-  long(Q.intro, 'Max ' + M.intro + ' characters. History, territory, craftsmanship. Ex. Founded in 1977 in Erbusco, nestled in the rolling hills of Franciacorta…', M.intro, true);
-  short(Q.bold, 'Copy here, exactly as written above, the ONE sentence of the presentation to print in bold. Ex. Every bottle embodies the uncompromised craftsmanship of Made in Italy', 300, false);
-  short(Q.mission, 'Max ' + M.mission + '. Ex. Artisanal Excellence & Terroir', M.mission, true);
-  short(Q.vision, 'Max ' + M.vision + '. Ex. The Global Benchmark for Metodo Classico', M.vision, true);
-  short(Q.quote, 'Max ' + M.quote + ', without quotation marks. Ex. Wine is the art of listening to the land and letting time do its work.', M.quote, true);
-  short(Q.quoteAuthor, 'Ex. Vittorio Moretti', 60, true);
-  short(Q.quoteRole, 'Ex. Founder', 60, false);
-  short(Q.who, 'Max ' + M.who + '. The ideal American buyer or partner. Ex. Sommeliers, fine wine buyers & hospitality directors.', M.who, true);
-  short(Q.discover, 'Max ' + M.discover + '. Ex. Metodo Classico Franciacorta cuvées.', M.discover, true);
-  short(Q.sig1, 'Max ' + M.signature + '. Signature product or line. Ex. Alma Grande Cuvée', M.signature, true);
-  short(Q.sig2, 'Max ' + M.signature, M.signature, false);
-  short(Q.sig3, 'Max ' + M.signature, M.signature, false);
-  long(Q.events, 'Up to 4 US fairs, events or stores, ONE PER LINE, with the link if any. Ex.\nVinitaly USA | https://www.vinitalyusa.com\nFood & Wine Classic in Aspen', 600, false);
-  long(Q.bring, 'Max ' + M.bring + '. Your offer for the American market. Ex. The pinnacle of Italian Metodo Classico sparkling wines…', M.bring, true);
   form.addCheckboxItem().setTitle(Q.consent).setRequired(true).setChoiceValues([
     "Confermo che l'azienda ha i diritti d'uso di testi, foto e logo inviati e ne autorizza la pubblicazione nell'annuario Italy meets America (sito web, PDF e stampa, comunicazioni a buyer e partner americani).",
   ]);
@@ -137,7 +137,7 @@ function imaFormSetup_(form) {
   form.setDescription(
     'Forbes Italia · Italy meets America – The Yearbook 2026.\n' +
     "L'annuario presenta le aziende italiane a buyer e partner americani (sito web, PDF, community Forbes USA).\n\n" +
-    'Due parti: 1 · Dati generali (anche la segreteria, pochi minuti) · 2 · Il racconto dell\'azienda (il marketing, in inglese, circa 30 minuti).\n' +
+    'Due parti: 1 · Il racconto dell\'azienda (in inglese, circa 30 minuti) · 2 · Dati pratici (pochi minuti).\n' +
     'Prima della pubblicazione riceverete la bozza della scheda da approvare.');
   form.setRequireLogin(false); // external companies: no Google account needed
   form.setAllowResponseEdits(false);

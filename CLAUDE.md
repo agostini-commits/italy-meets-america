@@ -21,7 +21,7 @@ Handoff for Claude Code. Full documentation in README.md.
 - Company form (04/11): `apps-script/Form.gs` (FormApp, created once from the sheet menu, no login required): answers →
   Companies rows in `draft` (`imaFormToRow_` is pure; question titles are the keys, do not rename). Photos by link, not upload.
   Limits in `IMA_FORM.MAX` = `src/schema.ts`. Tested in Node with mocked Google services (scratch script).
-  Two parts (AGO 04/11): 1 general data (assistant, minutes), 2 company story (marketing, English, 30'). Address, city,
+  Two parts (AGO 04/11): 1 company story (marketing, English, 30': what the slide promises), 2 practical data (minutes). Address, city,
   region from the Google Maps link of the headquarters (`imaPlaceFromMaps_`, Maps geocoder; never typed). Menu
   "Rebuild the company form" (same link) and "Short link and slide" (forms.gle into the slide `IMA_FORM.SLIDE_ID`).
 - There is no HTML preview file (AGO 04/11): the visual reference is the PDF.
