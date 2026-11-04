@@ -4,6 +4,7 @@ import '@fontsource/playfair-display/700.css';
 import '@fontsource/playfair-display/700-italic.css';
 import './styles/tokens.css';
 import './styles/base.css';
+import './styles/card.css';
 
 import { registerSW } from 'virtual:pwa-register';
 import { cardLeft, cardShown } from './analytics';

@@ -16,4 +16,6 @@ Handoff for Claude Code. Full documentation in README.md.
   "My selection" PDF, US fairs calendar, AI matchmaker.
 - Original photos are not in git (`media/`). Generated images in `public/img` are committed for now; the publish
   pipeline (sheet button → GitHub Action → Drive download → import → images → Netlify) is still to be built.
+- There is no HTML preview file (AGO 04/11): the visual reference is the PDF.
+- Mobile card (04/11): `src/views/company.ts` + `src/styles/card.css`; quote without quotation marks, as in the PDF.
 - Every value from the sheet goes through `html``…`` (escaping) and links through `safeUrl()`.
