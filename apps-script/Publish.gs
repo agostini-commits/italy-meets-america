@@ -24,7 +24,10 @@ function onOpen() {
     .addItem('Publish status', 'imaStatus')
     .addSeparator()
     .addItem('Open the site', 'imaOpenSite')
+    .addSeparator()
     .addItem('Create the company form', 'imaCreateForm')
+    .addItem('Rebuild the company form', 'imaRebuildForm')
+    .addItem('Short link and slide', 'imaShortLinkToSlide')
     .addToUi();
 }
 
