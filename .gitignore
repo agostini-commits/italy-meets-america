@@ -4,3 +4,5 @@ dist/
 media/
 .env
 .DS_Store
+# Netlify CLI local state (site link): not part of the project
+.netlify/

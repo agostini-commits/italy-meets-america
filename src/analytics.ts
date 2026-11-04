@@ -56,7 +56,7 @@ export function cardLeft(): void {
 document.addEventListener('visibilitychange', () => {
   if (document.visibilityState === 'hidden') cardLeft();
 });
-window.addEventListener('appinstalled', () => track('install'));
+window.addEventListener('appinstalled', () => track('install', { outcome: 'installed' }));
 
 /** Clicks: any element with data-track="click_website" data-company="…" data-label="…". */
 document.addEventListener('click', (e) => {

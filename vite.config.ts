@@ -28,8 +28,10 @@ export default defineConfig({
       },
       workbox: {
         // App shell and fonts are precached: the app opens offline after the first visit.
-        globPatterns: ['**/*.{js,css,html,svg,woff2}', 'icons/*.png'],
-        globIgnores: ['**/img/**', '**/company/**', '**/*cyrillic*', '**/*greek*', '**/*vietnamese*'],
+        // + the card data (a few KB): at the first visit the data is fetched before the service worker
+        // is active, so without this the yearbook would be empty offline.
+        globPatterns: ['**/*.{js,css,html,svg,woff2}', 'icons/*.png', 'data/**/*.json', 'img/*/manifest.json'],
+        globIgnores: ['**/img/**/*.{webp,jpg,jpeg,png,svg}', '**/company/**', '**/*cyrillic*', '**/*greek*', '**/*vietnamese*'],
         navigateFallback: '/index.html',
         navigateFallbackDenylist: [/^\/img\//, /^\/data\//, /^\/sitemap\.xml$/, /^\/robots\.txt$/],
         runtimeCaching: [

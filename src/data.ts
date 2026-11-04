@@ -33,13 +33,14 @@ export function loadEdition(year: number): Promise<EditionData> {
     cache.set(
       year,
       (async () => {
-        const editions = await loadEditions();
-        const edition = editions.find((e) => e.edition === year);
-        if (!edition) throw new Error(`Edition ${year} not found`);
-        const [companies, images] = await Promise.all([
+        // The three files in parallel: the year is already in the address (the photo is found sooner).
+        const [editions, companies, images] = await Promise.all([
+          loadEditions(),
           getJson<Company[]>(`/data/${year}/companies.json`),
           getJson<Record<string, ImageInfo>>(`/img/${year}/manifest.json`, {}),
         ]);
+        const edition = editions.find((e) => e.edition === year);
+        if (!edition) throw new Error(`Edition ${year} not found`);
         return { edition, companies, images };
       })(),
     );

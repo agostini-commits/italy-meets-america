@@ -48,12 +48,12 @@ Bold in the intro: `**one passage**`. Images: file names only (`bellavista-photo
 
 ### Updating the data from the sheet
 
-1. In the sheet: File → Share → Publish to web → tab **Companies** → **CSV** → Publish. Copy the link.
-2. Once: in Netlify (Site configuration → Environment variables) add `SHEET_CSV_URL` = that link.
-   Locally: `SHEET_CSV_URL=… npm run import-data` or `npm run import-data -- --url "…"`.
-3. Without the link: File → Download → CSV of the Companies tab, save it as `data/source/companies.csv`, then `npm run import-data`.
-4. Read `data/import-report.md`. A row with errors is **not** published; with `--strict` (automatic in CI) the
-   import fails if an approved row has errors, so a company never disappears silently.
+**Publish to site** (menu "Italy meets America" in the sheet) starts `.github/workflows/publish.yml`: sheet read with a
+service account (`npm run fetch-sheet`, internal `_` columns dropped), new or changed photos from the Drive folder
+(`npm run fetch-drive`), `import-data --strict`, `images`, `build`, Netlify deploy, result in the `_Publish` tab
+(`npm run publish-log`). Setup and troubleshooting: `docs/PUBLISH-SETUP.md`. The sheet is **not** published on the web.
+
+Locally, with the same environment variables: `npm run publish` (everything except the deploy).
 
 ### Validation (report)
 
@@ -82,6 +82,18 @@ page, 2 for premium), cover, **For the printer** (3 mm bleed + crop marks: page 
 - A card with every field at its maximum length fits both formats (tested with a synthetic card).
 - Browsers cannot write PDF TrimBox/BleedBox: the printer reads trim from the crop marks.
 
+## PWA and speed
+
+- Precache (service worker): app, fonts, card data and image manifest (≈ 375 KB). Photos are cached when seen;
+  at the first visit the photos on screen are requested again once the service worker takes control.
+  Offline, a photo never seen shows its dominant colour. Install button on the cover (`src/pwa.ts`):
+  browser prompt on Chrome/Edge/Android, instructions on iPhone/iPad.
+- `scripts/prerender.ts` writes each card page and the edition cover **already drawn**, with the CSS inline and
+  preloads for the photo and the data: the first card shows in ~0.5 s on 4G. The app keeps the pre-drawn page on
+  start (`data-prerendered`) and takes over from there.
+- Lighthouse mobile (04/11/2026): Performance 97–98, Accessibility 100, Best practices 100, SEO 100.
+- Test checklist and how to update the data: `docs/CHECKLIST-V1.md`.
+
 ## Analytics
 
 All events go through `track()` in `src/analytics.ts` (card_view, card_time, click_email, click_website,
@@ -100,5 +112,5 @@ New edition: add it to `config/editions.json`, duplicate the rows in the sheet w
 
 ## Deploy (Netlify)
 
-Build command `npm run build`, publish `dist` (see `netlify.toml`). `SITE_URL` (or Netlify's `URL`) is used for
-the Open Graph image addresses.
+Only the GitHub Action deploys (Netlify CLI, `--no-build`): do not link the repository in Netlify, it would publish
+the data stored in the repository instead of the sheet. `SITE_URL` is used for the Open Graph image addresses.

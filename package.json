@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.1.0",
   "type": "module",
-  "description": "Italy meets America – The Yearbook (Forbes Italia). Static PWA.",
+  "description": "Italy meets America \u2013 The Yearbook (Forbes Italia). Static PWA.",
   "engines": {
     "node": ">=20"
   },
@@ -15,7 +15,11 @@
     "build": "tsc --noEmit && vite build && tsx scripts/prerender.ts",
     "preview": "vite preview",
     "test": "vitest run",
-    "check": "tsc --noEmit && vitest run"
+    "check": "tsc --noEmit && vitest run",
+    "fetch-sheet": "tsx scripts/fetch-sheet.ts",
+    "fetch-drive": "tsx scripts/fetch-drive.ts",
+    "publish-log": "tsx scripts/publish-log.ts",
+    "publish": "npm run fetch-sheet && npm run fetch-drive && npm run import-data -- --strict && npm run images && npm run build"
   },
   "dependencies": {
     "@fontsource-variable/inter": "^5.3.0",
