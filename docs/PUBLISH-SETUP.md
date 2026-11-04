@@ -74,3 +74,25 @@ Un collegamento diretto pubblicherebbe i dati salvati nel repository, che posson
 | Foto "not on Drive" | nome nel foglio diverso dal nome del file su Drive (attenzione a maiuscole ed estensione) |
 
 Prova senza Google: `scripts` accettano `GOOGLE_SHEETS_API` / `GOOGLE_DRIVE_API` per un server finto (usato nei test del 04/11/2026).
+
+## Modulo per le aziende (raccolta dati)
+
+`apps-script/Form.gs` (stesso progetto Apps Script del foglio, file a parte) crea un Modulo Google collegato al foglio:
+ogni risposta diventa una riga di **Companies** in stato **draft**.
+
+1. Nell'editor Apps Script: **+** accanto a "File" → **Script** → nome `Form` → incollare `apps-script/Form.gs`.
+2. Sostituire `appsscript.json` con la versione aggiornata (servono i permessi per Moduli e trigger) e salvare.
+3. Ricaricare il foglio → **Italy meets America → Create the company form** → autorizzare. Il messaggio finale dà il
+   link da mandare alle aziende e quello per modificare il Modulo. Va fatto **una volta sola** (una seconda volta
+   mostra di nuovo i link).
+
+Come funziona:
+- Modulo in italiano, testi della pagina 2 in inglese, limiti di caratteri controllati durante la compilazione.
+- Compilabile senza account Google. Le foto **non** si caricano dal Modulo (Google chiederebbe l'accesso): l'azienda
+  incolla un link WeTransfer/Dropbox/Drive, salvato in `_internal_notes`. La redazione mette i file nella cartella
+  foto e scrive i nomi nelle colonne `logo`, `photo`, `gallery_*`.
+- La redazione completa `package` (base/premium) e controlla il settore; poi `to_client` per mandare la bozza,
+  `approved` dopo l'ok del cliente.
+- La stessa azienda che rimanda il Modulo mentre la riga è `draft` aggiorna quella riga; se la riga è già oltre la
+  bozza ne nasce una nuova con id `-2` (da controllare).
+- Le risposte originali restano nella scheda `_Form responses`.
