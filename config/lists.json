@@ -1,0 +1,13 @@
+{
+  "_note": "Mirror of the 'Lists' tab of the Google Sheet. If you add a sector there, add it here too.",
+  "sectors": [
+    "Food & Beverage", "Wine & Spirits", "Fashion & Luxury", "Beauty & Wellness", "Design & Furniture",
+    "Automotive & Mobility", "Nautical & Yachting", "Industry & Manufacturing", "Technology & Innovation",
+    "Health & Life Sciences", "Hospitality & Travel", "Finance & Services", "Energy & Sustainability", "Art & Culture"
+  ],
+  "regions": [
+    "Abruzzo", "Aosta Valley", "Apulia", "Basilicata", "Calabria", "Campania", "Emilia-Romagna",
+    "Friuli Venezia Giulia", "Lazio", "Liguria", "Lombardy", "Marche", "Molise", "Piedmont", "Sardinia",
+    "Sicily", "Trentino-South Tyrol", "Tuscany", "Umbria", "Veneto"
+  ]
+}

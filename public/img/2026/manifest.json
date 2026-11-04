@@ -1,0 +1,53 @@
+{
+ "cover.jpg": {
+  "src": "317342-1793807434037",
+  "width": 1195,
+  "height": 1313,
+  "color": "#183828",
+  "web": {
+   "600": "/img/2026/_cover/cover-600.webp",
+   "1000": "/img/2026/_cover/cover-1000.webp",
+   "1195": "/img/2026/_cover/cover-1195.webp"
+  },
+  "print": "/img/2026/_cover/cover-print.jpg",
+  "og": "/img/2026/_cover/cover-og.jpg"
+ },
+ "bellavista-photo.jpg": {
+  "src": "129405-1793807434040",
+  "width": 907,
+  "height": 1226,
+  "color": "#f8f8f8",
+  "web": {
+   "600": "/img/2026/bellavista/bellavista-photo-600.webp",
+   "907": "/img/2026/bellavista/bellavista-photo-907.webp"
+  },
+  "print": "/img/2026/bellavista/bellavista-photo-print.jpg",
+  "og": "/img/2026/bellavista/bellavista-photo-og.jpg"
+ },
+ "domori-photo.jpg": {
+  "src": "198344-1793807434046",
+  "width": 1196,
+  "height": 1684,
+  "color": "#f898a8",
+  "web": {
+   "600": "/img/2026/domori/domori-photo-600.webp",
+   "1000": "/img/2026/domori/domori-photo-1000.webp",
+   "1196": "/img/2026/domori/domori-photo-1196.webp"
+  },
+  "print": "/img/2026/domori/domori-photo-print.jpg",
+  "og": "/img/2026/domori/domori-photo-og.jpg"
+ },
+ "e-marinella-photo.jpg": {
+  "src": "179329-1793807434044",
+  "width": 1196,
+  "height": 1684,
+  "color": "#080808",
+  "web": {
+   "600": "/img/2026/e-marinella/e-marinella-photo-600.webp",
+   "1000": "/img/2026/e-marinella/e-marinella-photo-1000.webp",
+   "1196": "/img/2026/e-marinella/e-marinella-photo-1196.webp"
+  },
+  "print": "/img/2026/e-marinella/e-marinella-photo-print.jpg",
+  "og": "/img/2026/e-marinella/e-marinella-photo-og.jpg"
+ }
+}

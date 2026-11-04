@@ -1,0 +1,227 @@
+[
+  {
+    "id": "bellavista",
+    "edition": 2026,
+    "status": "approved",
+    "package": "base",
+    "sort_order": 1,
+    "sector": "Food & Beverage",
+    "sector_slug": "food-and-beverage",
+    "name": "Bellavista",
+    "city": "Erbusco",
+    "region": "Lombardy",
+    "headline": "The Art of Time",
+    "intro": "Founded in 1977 in Erbusco, nestled in the rolling hills of Franciacorta, Bellavista was born from Vittorio Moretti's passion for a singular hillside overlooking Lake Iseo. Over the decades, the estate has grown into one of the most distinguished emblems of fine Italian winemaking on the international stage. Every bottle embodies the uncompromised craftsmanship of Made in Italy: more than one hundred hillside parcels harvested entirely by hand, gentle pressing using traditional wooden basket presses, and extended aging deep inside cellars carved into the morainic rock. Here, absolute respect for the terroir, bespoke attention to detail, and the patience of time preserve a mastery passed down harvest after harvest.",
+    "intro_parts": [
+      {
+        "text": "Founded in 1977 in Erbusco, nestled in the rolling hills of Franciacorta, Bellavista was born from Vittorio Moretti's passion for a singular hillside overlooking Lake Iseo. Over the decades, the estate has grown into one of the most distinguished emblems of fine Italian winemaking on the international stage. ",
+        "bold": false
+      },
+      {
+        "text": "Every bottle embodies the uncompromised craftsmanship of Made in Italy",
+        "bold": true
+      },
+      {
+        "text": ": more than one hundred hillside parcels harvested entirely by hand, gentle pressing using traditional wooden basket presses, and extended aging deep inside cellars carved into the morainic rock. Here, absolute respect for the terroir, bespoke attention to detail, and the patience of time preserve a mastery passed down harvest after harvest.",
+        "bold": false
+      }
+    ],
+    "mission": "Artisanal Excellence & Terroir",
+    "vision": "The Global Benchmark for Metodo Classico",
+    "quote": "Wine is the art of listening to the land and letting time do its work.",
+    "quote_author": "Vittorio Moretti",
+    "quote_role": "Founder",
+    "who_should_connect": "Sommeliers, fine wine buyers & hospitality directors.",
+    "what_to_discover": "Metodo Classico Franciacorta cuvées.",
+    "since": 1977,
+    "signature": [
+      "Alma Grande Cuvée",
+      "Millesimati & Teatro alla Scala",
+      "Riserva Vittorio Moretti"
+    ],
+    "us_events": [
+      {
+        "name": "Vinitaly USA",
+        "url": null
+      },
+      {
+        "name": "Wine Spectator's New York Wine Experience",
+        "url": null
+      },
+      {
+        "name": "Food & Wine Classic in Aspen",
+        "url": null
+      }
+    ],
+    "what_they_bring": "The pinnacle of Italian Metodo Classico sparkling wines: artisanal cuvées, historic vintage reserves, and signature selections crafted for premier American dining, fine wine collectors, and hospitality leaders representing excellence.",
+    "company_legal_name": "Società agricola Bellavista S.R.L",
+    "address": {
+      "street": "Via Bellavista, 5",
+      "city": "25030 Erbusco (BS)",
+      "country": "Italy"
+    },
+    "emails": [
+      "info@bellavista.it",
+      "visit@bellavista.it"
+    ],
+    "website": "https://bellavista.it",
+    "website_label": "bellavista.it",
+    "social": {},
+    "logo": "bellavista-logo.svg",
+    "photo": {
+      "file": "bellavista-photo.jpg",
+      "alt": "Three bottles of Bellavista Alma Franciacorta on a stone ledge",
+      "credit": null
+    },
+    "gallery": [],
+    "pages": 2
+  },
+  {
+    "id": "domori",
+    "edition": 2026,
+    "status": "approved",
+    "package": "base",
+    "sort_order": 3,
+    "sector": "Food & Beverage",
+    "sector_slug": "food-and-beverage",
+    "name": "Domori",
+    "city": "None",
+    "region": "Piedmont",
+    "headline": "Redefining Haute Chocolaterie",
+    "intro": "Founded in 1997 in None, near Turin, Domori was born from Gianluca Franzoni's vision to safeguard the world's rarest aromatic cacao varieties and revive ancient Criollo genetics. Over nearly three decades, the maison has established itself as an uncompromising pioneer in haute chocolaterie, championing biodiversity and direct partnerships with local growers. Every creation embodies authentic Made in Italy craftsmanship: minimal, respectful processing using only fine cocoa and cane sugar, free from added cocoa butter, artificial flavors, or lecithin. Through gentle conching and low-temperature roasting, Domori safeguards the beans' natural aromatic richness, elevating fine chocolate into pure culinary art.",
+    "intro_parts": [
+      {
+        "text": "Founded in 1997 in None, near Turin, Domori was born from Gianluca Franzoni's vision to safeguard the world's rarest aromatic cacao varieties and revive ancient Criollo genetics. Over nearly three decades, the maison has established itself as an uncompromising pioneer in haute chocolaterie, championing biodiversity and direct partnerships with local growers. Every creation embodies authentic Made in Italy craftsmanship: minimal, respectful processing using only fine cocoa and cane sugar, free from added cocoa butter, artificial flavors, or lecithin. Through gentle conching and low-temperature roasting, ",
+        "bold": false
+      },
+      {
+        "text": "Domori safeguards the beans' natural aromatic richness",
+        "bold": true
+      },
+      {
+        "text": ", elevating fine chocolate into pure culinary art.",
+        "bold": false
+      }
+    ],
+    "mission": "Purity of Cocoa & Biodiversity",
+    "vision": "The Global Benchmark for Fine Chocolate",
+    "quote": "Chocolate is the pure aromatic voice of the land.",
+    "quote_author": "Gianluca Franzoni",
+    "quote_role": "Founder",
+    "who_should_connect": "Gourmet food importers, pastry chefs and luxury hospitality.",
+    "what_to_discover": "100% Pure Criollo chocolate and single-origin vintage bars.",
+    "since": 1997,
+    "signature": [
+      "Criollo Single Origins",
+      "Haute Pâtisserie Couvertures"
+    ],
+    "us_events": [
+      {
+        "name": "Summer Fancy Food Show",
+        "url": null
+      },
+      {
+        "name": "Winter Fancy Food Show",
+        "url": null
+      },
+      {
+        "name": "Northwest Chocolate Festival",
+        "url": null
+      }
+    ],
+    "what_they_bring": "Pure Italian chocolate artistry: rare Criollo single-origins, fine pastry couvertures, and gourmet confectionery crafted for America's top dining, luxury hospitality, and specialty retailers.",
+    "company_legal_name": "Domori S.p.A.",
+    "address": {
+      "street": "Via Pinerolo, 72–74",
+      "city": "10060 None (TO)",
+      "country": "Italy"
+    },
+    "emails": [
+      "info@domori.com",
+      "customercare@domori.com"
+    ],
+    "website": "https://domori.com",
+    "website_label": "domori.com",
+    "social": {},
+    "logo": "domori-logo.svg",
+    "photo": {
+      "file": "domori-photo.jpg",
+      "alt": "A box of Domori single-origin Napolitains with roses on a pink background",
+      "credit": null
+    },
+    "gallery": [],
+    "pages": 2
+  },
+  {
+    "id": "e-marinella",
+    "edition": 2026,
+    "status": "approved",
+    "package": "base",
+    "sort_order": 2,
+    "sector": "Fashion & Luxury",
+    "sector_slug": "fashion-and-luxury",
+    "name": "E. Marinella",
+    "city": "Naples",
+    "region": "Campania",
+    "headline": "The Knot of Elegance",
+    "intro": "Founded in 1914 by Eugenio Marinella along the Riviera di Chiaia in Naples, the maison was born with the ambition of creating an authentic corner of British style combined with the warmth and flair of Neapolitan elegance. Over the course of more than a century, guided from generation to generation up to Maurizio and Alessandro Marinella, the boutique has become a global landmark for haute couture and bespoke tie-making, dressing heads of state, royalty, and international leaders. Every creation embodies the uncompromised craftsmanship of Made in Italy: exclusive English silks still hand-printed using traditional methods, cut and sewn one by one by master tailors in the Neapolitan workshop.",
+    "intro_parts": [
+      {
+        "text": "Founded in 1914 by Eugenio Marinella along the Riviera di Chiaia in Naples, the maison was born with the ambition of creating an authentic corner of British style combined with the warmth and flair of Neapolitan elegance. Over the course of more than a century, guided from generation to generation up to Maurizio and Alessandro Marinella, ",
+        "bold": false
+      },
+      {
+        "text": "the boutique has become a global landmark for haute couture and bespoke tie-making",
+        "bold": true
+      },
+      {
+        "text": ", dressing heads of state, royalty, and international leaders. Every creation embodies the uncompromised craftsmanship of Made in Italy: exclusive English silks still hand-printed using traditional methods, cut and sewn one by one by master tailors in the Neapolitan workshop.",
+        "bold": false
+      }
+    ],
+    "mission": "The Soul of Neapolitan Tailoring",
+    "vision": "An Enduring Global Icon of Italian Style",
+    "quote": "A tie is not an accessory, but a personal statement of style.",
+    "quote_author": "Maurizio Marinella",
+    "quote_role": "President",
+    "who_should_connect": "Luxury department store buyers, high-end menswear boutiques, stylists.",
+    "what_to_discover": "Bespoke seven-fold ties and hand-printed silk accessories.",
+    "since": 1914,
+    "signature": [
+      "Classic & Seven-Fold Tie",
+      "Hand-Printed Silk Accessories"
+    ],
+    "us_events": [
+      {
+        "name": "E. Marinella New York Boutique",
+        "url": null
+      },
+      {
+        "name": "Chicago Collective Menswear Show",
+        "url": null
+      }
+    ],
+    "what_they_bring": "The quintessence of Neapolitan haute couture: legendary hand-sewn ties, archival silk collections, and a bespoke service dedicated to refined professionals, luxury department stores, and connoisseurs of classic Italian elegance.",
+    "company_legal_name": "E. Marinella S.r.l.",
+    "address": {
+      "street": "Riviera di Chiaia, 287",
+      "city": "80121 Naples (NA)",
+      "country": "Italy"
+    },
+    "emails": [
+      "marinella@emarinella.com",
+      "customercare@emarinella.com"
+    ],
+    "website": "https://emarinella.eu",
+    "website_label": "emarinella.eu",
+    "social": {},
+    "logo": "e-marinella-logo.svg",
+    "photo": {
+      "file": "e-marinella-photo.jpg",
+      "alt": "A hand holding a fan of patterned Marinella silk ties",
+      "credit": null
+    },
+    "gallery": [],
+    "pages": 2
+  }
+]

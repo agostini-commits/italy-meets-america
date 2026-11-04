@@ -1,0 +1,117 @@
+{
+  "generated_at": "2026-11-04T15:55:01.008Z",
+  "source": "data/source/companies.csv",
+  "published": 3,
+  "rows": [
+    {
+      "line": 2,
+      "id": "bellavista",
+      "edition": 2026,
+      "name": "Bellavista",
+      "status": "approved",
+      "errors": [],
+      "warnings": [
+        {
+          "field": "photo",
+          "message": "907×1226 px, below 2600×3600: fine on the web, NOT good enough for print"
+        },
+        {
+          "field": "logo",
+          "message": "file \"bellavista-logo.svg\" not found in the originals folder"
+        }
+      ],
+      "published": true
+    },
+    {
+      "line": 3,
+      "id": "e-marinella",
+      "edition": 2026,
+      "name": "E. Marinella",
+      "status": "approved",
+      "errors": [],
+      "warnings": [
+        {
+          "field": "photo",
+          "message": "1196×1684 px, below 2600×3600: fine on the web, NOT good enough for print"
+        },
+        {
+          "field": "logo",
+          "message": "file \"e-marinella-logo.svg\" not found in the originals folder"
+        }
+      ],
+      "published": true
+    },
+    {
+      "line": 4,
+      "id": "domori",
+      "edition": 2026,
+      "name": "Domori",
+      "status": "approved",
+      "errors": [],
+      "warnings": [
+        {
+          "field": "photo",
+          "message": "1196×1684 px, below 2600×3600: fine on the web, NOT good enough for print"
+        },
+        {
+          "field": "logo",
+          "message": "file \"domori-logo.svg\" not found in the originals folder"
+        }
+      ],
+      "published": true
+    }
+  ],
+  "images": {
+    "checked": true,
+    "list": [
+      {
+        "id": "bellavista",
+        "file": "bellavista-photo.jpg",
+        "kind": "photo",
+        "found": true,
+        "width": 907,
+        "height": 1226,
+        "ok": false
+      },
+      {
+        "id": "bellavista",
+        "file": "bellavista-logo.svg",
+        "kind": "logo",
+        "found": false,
+        "ok": false
+      },
+      {
+        "id": "e-marinella",
+        "file": "e-marinella-photo.jpg",
+        "kind": "photo",
+        "found": true,
+        "width": 1196,
+        "height": 1684,
+        "ok": false
+      },
+      {
+        "id": "e-marinella",
+        "file": "e-marinella-logo.svg",
+        "kind": "logo",
+        "found": false,
+        "ok": false
+      },
+      {
+        "id": "domori",
+        "file": "domori-photo.jpg",
+        "kind": "photo",
+        "found": true,
+        "width": 1196,
+        "height": 1684,
+        "ok": false
+      },
+      {
+        "id": "domori",
+        "file": "domori-logo.svg",
+        "kind": "logo",
+        "found": false,
+        "ok": false
+      }
+    ]
+  }
+}

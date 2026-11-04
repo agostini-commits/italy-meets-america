@@ -1,0 +1,48 @@
+/* Colours from the approved PDF. Interface: light / dark. Card: always "paper". */
+:root {
+  --forbes-green: #0c2b22;
+  --forbes-green-2: #143d31;
+  --gold: #c8962e;
+  --gold-text: #8a6414; /* gold for small text on paper: AA contrast (5.0:1 on #fcf7ee) */
+  --paper: #fcf7ee;
+  --paper-line: #e3c98f;
+  --paper-tag: #eee8de;
+  --ink: #141414;
+  --ink-2: #4a4a4a;
+
+  --serif: 'Playfair Display', 'Playfair', Georgia, 'Times New Roman', serif;
+  --sans: 'Inter Variable', Inter, system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+
+  /* interface (changes with the theme) */
+  --ui-bg: #f4f1ea;
+  --ui-fg: #141414;
+  --ui-muted: #5c5c5c;
+  --ui-line: #d9d2c3;
+  --ui-bar: #ffffffcc;
+  --ui-accent: var(--forbes-green);
+
+  --gutter: 20px;
+  --tap: 44px;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --ui-bg: #0b1512;
+    --ui-fg: #f1ece2;
+    --ui-muted: #a9b3ae;
+    --ui-line: #26352f;
+    --ui-bar: #0b1512cc;
+    --ui-accent: #e2b858;
+    color-scheme: dark;
+  }
+}
+:root[data-theme='dark'] {
+  --ui-bg: #0b1512;
+  --ui-fg: #f1ece2;
+  --ui-muted: #a9b3ae;
+  --ui-line: #26352f;
+  --ui-bar: #0b1512cc;
+  --ui-accent: #e2b858;
+  color-scheme: dark;
+}
