@@ -56,7 +56,7 @@ export interface Company {
   logo: string;
   photo: ImageRef & { credit: string | null };
   gallery: ImageRef[];
-  /** Number of print pages: base 2, premium 4. */
+  /** Number of magazine pages (PACKAGE_INFO): 2, or 4 for the Extended Profile. */
   pages: number;
 }
 

@@ -62,16 +62,35 @@ describe('limits and required fields', () => {
     const fields = validateRow(row, 2, lists).errors.map((e) => e.field);
     expect(fields).toEqual(expect.arrayContaining(['id', 'email_2', 'website', 'since', 'social_instagram']));
   });
-  it('gallery only for premium; premium without gallery is a warning', () => {
-    const base = bellavista();
-    base.gallery_1 = 'a.jpg';
-    expect(validateRow(base, 2, lists).errors[0].field).toBe('gallery_1');
-    const premium = bellavista();
-    premium.package = 'premium';
-    const r = validateRow(premium, 2, lists);
-    expect(r.errors).toEqual([]);
-    expect(r.warnings[0].field).toBe('gallery_1');
-    expect(r.company?.pages).toBe(4);
+  it('the four packages of the media kit: pages and portfolio', () => {
+    for (const [pkg, pages] of [['corporate', 2], ['priority', 2], ['extended', 4], ['cover_partner', 2]] as const) {
+      const row = { ...bellavista(), package: pkg, gallery_1: pkg === 'extended' ? 'a.jpg' : '', gallery_2: pkg === 'extended' ? 'b.jpg' : '' };
+      const r = validateRow(row, 2, lists);
+      expect(r.errors).toEqual([]);
+      expect(r.company?.pages).toBe(pages);
+    }
+    expect(validateRow({ ...bellavista(), package: 'gold' }, 2, lists).errors[0].field).toBe('package');
+  });
+  it('portfolio only for the Extended Profile, 2 photos at most; missing photos are a warning', () => {
+    expect(validateRow({ ...bellavista(), gallery_1: 'a.jpg' }, 2, lists).errors[0].field).toBe('gallery_1');
+    const one = validateRow({ ...bellavista(), package: 'extended', gallery_1: 'a.jpg' }, 2, lists);
+    expect(one.errors).toEqual([]);
+    expect(one.warnings.map((w) => w.field)).toContain('gallery_1');
+    const three = validateRow({ ...bellavista(), package: 'extended', gallery_1: 'a.jpg', gallery_2: 'b.jpg', gallery_3: 'c.jpg' }, 2, lists);
+    expect(three.errors.map((e) => e.field)).toEqual(['gallery_3']);
+  });
+  it('old package names still work, with a warning', () => {
+    const r = validateRow({ ...bellavista(), package: 'base' }, 2, lists);
+    expect(r.company?.package).toBe('corporate');
+    expect(r.warnings.map((w) => w.field)).toContain('package');
+    expect(validateRow({ ...bellavista(), package: 'premium', gallery_1: 'a.jpg', gallery_2: 'b.jpg' }, 2, lists).company?.package).toBe('extended');
+  });
+  it('at most 3 Front Cover Partners per edition', () => {
+    const rows = ['a', 'b', 'c', 'd'].map((id, i) => validateRow({ ...bellavista(), id, name: id.toUpperCase(), package: 'cover_partner' }, i + 2, lists));
+    crossCheck(rows);
+    expect(rows.map((r) => r.errors.length)).toEqual([0, 0, 0, 1]);
+    expect(rows[3].errors[0].field).toBe('package');
+    expect(rows[3].company).toBeNull();
   });
 });
 

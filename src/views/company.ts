@@ -8,7 +8,7 @@ import type { Company, Social } from '../types';
 /**
  * One card. Order of the blocks (approved layout, PDF 2026):
  * logo + name + city | intro with drop cap | Mission / Vision | quote + Who should connect / What to discover |
- * Since + Signature | Find us in the US | What they bring to America | Contacts + social (| gallery, premium).
+ * Since + Signature | Find us in the US | What they bring to America | Contacts + social (| portfolio, Extended Profile).
  * Mobile (< 600 px): photo 4:5 on top with sector, headline and footer over it, then the text.
  */
 export function companyCard(c: Company, data: EditionData, eager: boolean) {
@@ -104,7 +104,7 @@ export function companyCard(c: Company, data: EditionData, eager: boolean) {
 
         ${c.gallery.length
           ? html`<section class="card-section" aria-labelledby="gallery-${c.id}">
-              <h2 id="gallery-${c.id}" class="card-label card-rule">Gallery</h2>
+              <h2 id="gallery-${c.id}" class="card-label card-rule">Portfolio</h2>
               <div class="card-gallery">${c.gallery.map((g) => picture(img[g.file], { alt: g.alt, sizes: '(min-width: 900px) 20vw, 50vw' }))}</div>
             </section>`
           : ''}

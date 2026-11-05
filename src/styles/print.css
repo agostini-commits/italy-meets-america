@@ -126,16 +126,14 @@
 .ps-text--single .ps-since, .ps-text--single .ps-sig { padding: 1.6mm 2mm 2mm; }
 .ps-text--single .ps-rule { margin-top: 2.2mm !important; }
 
-/* gallery (premium) */
-.sheet--gallery .sheet-trim { padding: 14mm 14mm 18mm; }
-.ps-gallery-page { height: 100%; display: grid; grid-template-rows: auto 1fr; gap: 4mm; }
-.ps-gallery { display: grid; grid-template-columns: 1fr 1fr; grid-auto-rows: 1fr; gap: 3mm; }
+/* portfolio (Extended Profile) */
+.sheet--gallery.sheet--landscape .sheet-trim { padding: 14mm 14mm 18mm; }
+.ps-gallery-page { height: 100%; display: grid; grid-template-rows: auto minmax(0, 1fr); gap: 4mm; }
+.ps-gallery { display: grid; grid-template-columns: 1fr 1fr; grid-auto-rows: minmax(0, 1fr); gap: 3mm; min-height: 0; }
 .ps-gallery > * { position: relative; inset: auto; width: 100%; height: 100%; object-fit: cover; }
 .ps-gallery--1 { grid-template-columns: 1fr; }
-.ps-gallery--3 > :first-child, .ps-gallery--5 > :first-child { grid-column: span 2; }
-.sheet--landscape .ps-gallery { grid-template-columns: repeat(3, 1fr); }
-.sheet--landscape .ps-gallery--6 { grid-template-columns: repeat(3, 1fr); }
-.sheet--landscape .ps-gallery--5 > :first-child, .sheet--landscape .ps-gallery--3 > :first-child { grid-column: auto; grid-row: span 2; }
+/* Portfolio of the Extended Profile on a landscape sheet: the 2 photos side by side */
+.sheet--landscape .ps-gallery { grid-template-columns: repeat(2, 1fr); }
 
 /* cover */
 .ps-cover-shade { position: absolute; inset: 0; background: linear-gradient(to bottom, rgb(12 43 34 / 0) 45%, rgb(12 43 34 / .85) 78%, #0c2b22 100%); }
@@ -147,6 +145,9 @@
 .ps-cover-title { margin: 0; font: 700 62pt/.95 var(--serif); }
 .ps-cover-title em { display: block; font-style: italic; }
 .ps-cover-tag { margin: 6mm 0 0; max-width: 110mm; font: 10pt/1.4 var(--sans); }
+/* Front Cover Partners (max 3 brands) */
+.ps-cover-partners { margin: 8mm 0 0; padding-top: 3mm; border-top: .3mm solid rgb(255 255 255 / .5); max-width: 150mm; font: 600 13pt/1.3 var(--serif); }
+.ps-cover-partners span { display: block; margin-bottom: 1.5mm; font: 500 7pt var(--sans); letter-spacing: .12em; text-transform: uppercase; }
 
 /* --- printing ---------------------------------------------------------------------------------------- */
 @media print {

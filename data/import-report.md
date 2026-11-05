@@ -1,6 +1,6 @@
 # Import report – Italy meets America
 
-Source: data/source/companies.csv · 04/11/2026, 19:55:49
+Source: data/source/companies.csv · 05/11/2026, 00:14:40
 
 ## Summary
 
@@ -9,7 +9,11 @@ Source: data/source/companies.csv · 04/11/2026, 19:55:49
 | Rows in the sheet | 3 |
 | status approved | 3 |
 | **Published in the app** | **3** |
-| Print pages (base 2, premium 4) | 6 |
+| Magazine pages (2 per card, 4 for the Extended Profile) | 6 |
+| Corporate Profile | 3 |
+| Priority Position Profile | 0 |
+| Extended Profile | 0 |
+| Front Cover Partner | 0 |
 | Approved/published rows NOT published because of errors | 0 |
 | Rows with warnings | 3 |
 
