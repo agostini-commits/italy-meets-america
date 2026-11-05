@@ -247,6 +247,17 @@ function imaMapsParse_(url) {
   return out;
 }
 
+/** Italian names → English names of the sheet (keys without accents, spaces or punctuation). */
+var IMA_REGIONS_IT = {
+  valledaosta: 'Aosta Valley', valleedaoste: 'Aosta Valley', puglia: 'Apulia', friuliveneziagiulia: 'Friuli Venezia Giulia',
+  lombardia: 'Lombardy', piemonte: 'Piedmont', sardegna: 'Sardinia', sicilia: 'Sicily',
+  trentinoaltoadige: 'Trentino-South Tyrol', trentinoaltoadigesudtirol: 'Trentino-South Tyrol', toscana: 'Tuscany',
+};
+var IMA_CITIES_IT = {
+  milano: 'Milan', roma: 'Rome', napoli: 'Naples', torino: 'Turin', firenze: 'Florence', venezia: 'Venice',
+  genova: 'Genoa', padova: 'Padua', mantova: 'Mantua', siracusa: 'Syracuse', livorno: 'Leghorn',
+};
+
 /** Pure: Companies fields from two geocoder results (English for city and region, Italian for the address). */
 function imaPlaceFields_(en, it, regions) {
   var comp = function (r, type, short) {
@@ -254,9 +265,13 @@ function imaPlaceFields_(en, it, regions) {
     return c ? (short ? c.short_name : c.long_name) : '';
   };
   var key = function (s) { return String(s).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z]/g, ''); };
+  // Google Maps can answer in Italian even when English is asked (test of 05/11: "Milano", "Lombardia"):
+  // regions and the main cities are brought to the English names of the sheet here.
   var regionRaw = comp(en, 'administrative_area_level_1');
-  var region = (regions || []).filter(function (r) { return key(r) === key(regionRaw); })[0] || regionRaw;
-  var cityEn = comp(en, 'locality') || comp(en, 'administrative_area_level_3') || comp(en, 'postal_town');
+  var regionEn = IMA_REGIONS_IT[key(regionRaw)] || regionRaw;
+  var region = (regions || []).filter(function (r) { return key(r) === key(regionEn); })[0] || regionEn;
+  var cityRaw = comp(en, 'locality') || comp(en, 'administrative_area_level_3') || comp(en, 'postal_town');
+  var cityEn = IMA_CITIES_IT[key(cityRaw)] || cityRaw;
   var cityIt = comp(it, 'locality') || comp(it, 'administrative_area_level_3') || cityEn;
   var street = comp(it, 'route') + (comp(it, 'street_number') ? ', ' + comp(it, 'street_number') : '');
   var prov = comp(it, 'administrative_area_level_2', true);
@@ -266,7 +281,7 @@ function imaPlaceFields_(en, it, regions) {
     region: region,
     address_street: street,
     address_city: (cap ? cap + ' ' : '') + cityIt + (prov ? ' (' + prov + ')' : ''),
-    country: comp(en, 'country') || 'Italy',
+    country: comp(en, 'country', true) === 'IT' ? 'Italy' : comp(en, 'country') || 'Italy',
   };
 }
 
@@ -307,6 +322,14 @@ function imaPlaceFromMaps_(link, regions) {
 function imaCell_(v) {
   var s = String(v === undefined || v === null ? '' : v).replace(/\r\n/g, '\n').trim();
   return /^[=+\-@]/.test(s) ? "'" + s : s;
+}
+
+/** Google Forms accepts "www.site.com" as a link: the yearbook wants https:// (validate.ts). */
+function imaHttps_(s) {
+  var u = String(s || '').trim();
+  if (!u) return '';
+  if (/^http:\/\//i.test(u)) return 'https://' + u.slice(7);
+  return /^https:\/\//i.test(u) ? u : 'https://' + u.replace(/^\/+/, '');
 }
 
 function imaSlug_(s) {
@@ -352,8 +375,8 @@ function imaFormToRow_(nv, edition, now, place) {
     signature_1: get('sig1'), signature_2: get('sig2'), signature_3: get('sig3'),
     what_they_bring: get('bring'), company_legal_name: get('legal'), address_street: addr.address_street || '',
     address_city: addr.address_city || '', country: addr.country || 'Italy', email_1: get('email1'), email_2: get('email2'),
-    website: get('website'), social_facebook: get('facebook'), social_instagram: get('instagram'),
-    social_linkedin: get('linkedin'), social_youtube: get('youtube'), social_whatsapp: get('whatsapp'),
+    website: imaHttps_(get('website')), social_facebook: imaHttps_(get('facebook')), social_instagram: imaHttps_(get('instagram')),
+    social_linkedin: imaHttps_(get('linkedin')), social_youtube: imaHttps_(get('youtube')), social_whatsapp: imaHttps_(get('whatsapp')),
     photo_credit: get('photoCredit'),
     _client_contact_name: get('contactName') + (get('contactRole') ? ' (' + get('contactRole') + ')' : ''),
     _client_contact_email: get('contactEmail'),
@@ -415,11 +438,17 @@ function imaOnFormSubmit(e) {
       row._internal_notes += '\nUpdated by a new form answer (previous notes: ' + String(data[target - 1][cNotes] || '').split('\n')[0] + ')';
     }
     // Write only the columns the form fills: package, sort order and the images set by the team stay.
+    // One refused cell (e.g. a value outside a drop-down list) must not stop the row: it is left empty
+    // and written in the notes, so the team sees what to fix.
+    var refused = [];
     head.forEach(function (h, c) {
-      if (!(h in row)) return;
+      if (!(h in row) || h === '_internal_notes') return;
       if ((h === 'package' || h === 'sort_order') && !isNew) return;
-      sh.getRange(target, c + 1).setValue(imaCell_(row[h]));
+      try { sh.getRange(target, c + 1).setValue(imaCell_(row[h])); }
+      catch (err) { refused.push(h + ' = "' + row[h] + '" not accepted by the sheet (' + err.message + ')'); }
     });
+    if (refused.length) row._internal_notes = refused.join('\n') + '\n' + row._internal_notes;
+    if (cNotes >= 0) sh.getRange(target, cNotes + 1).setValue(imaCell_(row._internal_notes));
   } finally {
     lock.releaseLock();
   }
