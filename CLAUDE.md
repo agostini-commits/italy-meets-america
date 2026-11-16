@@ -28,6 +28,14 @@ Handoff for Claude Code. Full documentation in README.md.
   `cover_partner` (name on the cover, max 3). Brand visual = the photo page; the ad material is handled outside the form.
   `PACKAGE_INFO` in `src/schema.ts`; base/premium still read with a warning. Sheet: Lists C2:C5, Checks, Summary, InDesign
   (yearbook order + package + @portfolio_1/2) follow the same rules.
+- PROOF site (AGO 16/11): every "Publish to site" also deploys https://proof--italy-meets-america.netlify.app with every row
+  of the sheet (drafts too): `import-data --proof` (package/logo/photo/photo_alt missing and texts over the limit are warnings,
+  placeholders on screen), `PROOF=1` prerender (noindex, robots Disallow, red "PROOF" label). Step `continue-on-error`.
+- InDesign folder (AGO 16/11): `apps-script/InDesign.gs` (runs as the sheet owner): Drive folder "Italy meets America – InDesign"
+  next to the sheet with `yearbook.csv` (= InDesign tab, same file id) and `Links/` (files of the "@" columns copied from the photo
+  folder, only if new or changed). Menu "Update the InDesign folder", after each form answer, hourly trigger. InDesign tab: all rows
+  when Lists `indesign_include_drafts` = TRUE, `status` column, `_placeholder-photo.jpg` / `_placeholder-logo.png` (in the photo
+  folder) when a file is missing, line breaks of intro / what_they_bring as `<br>` (InDesign Data Merge breaks on returns).
 - There is no HTML preview file (AGO 04/11): the visual reference is the PDF.
 - Mobile card (04/11): `src/views/company.ts` + `src/styles/card.css`; quote without quotation marks, as in the PDF.
 - Desktop (AGO 04/11, option 1): spread with photo 38% / text 62%, text 13–16 px; width rule in `card.css`

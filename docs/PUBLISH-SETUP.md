@@ -107,3 +107,15 @@ Come funziona:
 - La stessa azienda che rimanda il Modulo mentre la riga è `draft` aggiorna quella riga; se la riga è già oltre la
   bozza ne nasce una nuova con id `-2` (da controllare).
 - Le risposte originali restano nella scheda `_Form responses`.
+
+## Sito di prova e cartella InDesign (16/11/2026)
+
+- **Sito di prova**: ogni "Publish to site" pubblica anche https://proof--italy-meets-america.netlify.app con tutte le righe
+  del foglio, bozze comprese; dove mancano foto o logo c'è un segnaposto. Non è indicizzato e ha l'etichetta rossa "PROOF".
+  Dal menu della pagina, **Print** mostra le pagine vere (Magazine o Single sheet) e salva il PDF di prova.
+- **Cartella InDesign** (`apps-script/InDesign.gs`, file a parte nello stesso progetto Apps Script): menu
+  **Update the InDesign folder**. La prima volta crea accanto al foglio la cartella "Italy meets America – InDesign" con
+  `yearbook.csv` e `Links/`, e installa l'aggiornamento ogni ora; si aggiorna anche a ogni risposta del Modulo.
+  `appsscript.json` ha in più il permesso Drive: al primo uso Google chiede di autorizzare di nuovo.
+- In **Lists**: `indesign_include_drafts` TRUE = nel CSV anche le bozze (prove), FALSE = solo approved e published (stampa);
+  `indesign_image_base_path` = percorso della cartella `Links` sincronizzata sul Mac del grafico, con la barra finale.

@@ -128,6 +128,7 @@ async function main() {
     const previous: Manifest = existsSync(manifestPath) ? JSON.parse(await readFile(manifestPath, 'utf8')) : {};
     const manifest: Manifest = {};
     for (const job of list) {
+      if (!job.file) continue; // PROOF site: no photo yet, the page shows a placeholder
       const info = await processJob(job, previous);
       if (!info) {
         missing++;
