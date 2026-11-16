@@ -26,8 +26,6 @@ function onOpen() {
     .addItem('Open the site', 'imaOpenSite')
     .addItem('Open the proof (drafts included)', 'imaOpenProof')
     .addSeparator()
-    .addItem('Update the InDesign folder', 'imaInDesignExport')
-    .addSeparator()
     .addItem('Create the company form', 'imaCreateForm')
     .addItem('Rebuild the company form', 'imaRebuildForm')
     .addItem('Short link and slide', 'imaShortLinkToSlide')
