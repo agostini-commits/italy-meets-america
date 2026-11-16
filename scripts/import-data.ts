@@ -11,6 +11,8 @@
  * Only "approved" and "published" rows are written; the others are validated and counted.
  * --strict (automatic when CI=true): exits with 1 if an approved/published row has errors,
  * so a deploy never drops a company silently.
+ * --proof: the PROOF site: every row is written whatever its status (drafts too), missing photos,
+ * logo and package are warnings (placeholders), never strict (validate.ts, ValidateOptions).
  */
 import { existsSync } from 'node:fs';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
@@ -28,7 +30,8 @@ const arg = (name: string) => {
   const i = args.indexOf(`--${name}`);
   return i >= 0 ? args[i + 1] : undefined;
 };
-const strict = args.includes('--strict') || process.env.CI === 'true';
+const proof = args.includes('--proof');
+const strict = !proof && (args.includes('--strict') || process.env.CI === 'true');
 const mediaDir = arg('media') ?? join(ROOT, 'media/originals');
 
 async function readSource(): Promise<{ text: string; source: string }> {
@@ -69,6 +72,7 @@ async function checkImages(results: RowResult[]): Promise<{ checked: boolean; li
       ...c.gallery.map((g) => [g.file, 'gallery'] as [string, PhotoCheck['kind']]),
     ];
     for (const [file, kind] of files) {
+      if (!file) continue; // proof: placeholder, already in the warnings
       const path = join(mediaDir, file);
       if (!existsSync(path)) {
         list.push({ id: c.id, file, kind, found: false, ok: false });
@@ -121,7 +125,7 @@ function reportMarkdown(p: {
   const pages = published.reduce((s, c) => s + c.pages, 0);
 
   const L: string[] = [];
-  L.push(`# Import report – Italy meets America`, '', `Source: ${p.source} · ${now}`, '');
+  L.push(`# Import report – Italy meets America${proof ? ' (PROOF: drafts included)' : ''}`, '', `Source: ${p.source} · ${now}`, '');
   L.push('## Summary', '');
   L.push(`| | |`, `|---|---:|`);
   L.push(`| Rows in the sheet | ${results.length} |`);
@@ -182,7 +186,7 @@ async function main() {
     process.exit(1);
   }
 
-  const results = parsed.rows.map(({ row, line }) => validateRow(row, line, lists));
+  const results = parsed.rows.map(({ row, line }) => validateRow(row, line, lists, { proof }));
   crossCheck(results);
   const images = await checkImages(results);
 
@@ -196,7 +200,7 @@ async function main() {
   }
 
   const published = sortCompanies(
-    results.filter((r) => r.company && isPublic(r.status)).map((r) => r.company!),
+    results.filter((r) => r.company && (proof || isPublic(r.status))).map((r) => r.company!),
     lists.sectors,
   );
 
@@ -231,7 +235,7 @@ async function main() {
 
   const blocking = results.filter((r) => r.errors.length && isPublic(r.status));
   const warnings = results.reduce((n, r) => n + r.warnings.length, 0);
-  console.log(`✔ ${published.length} cards published (${editionNumbers.join(', ') || 'no edition'}) from ${results.length} rows`);
+  console.log(`✔ ${proof ? 'PROOF: ' : ''}${published.length} cards published (${editionNumbers.join(', ') || 'no edition'}) from ${results.length} rows`);
   console.log(`  ${results.filter((r) => r.errors.length).length} rows with errors (${blocking.length} approved/published), ${warnings} warnings`);
   console.log(`  Report: data/import-report.md`);
   for (const r of blocking) console.log(`  ⛔ row ${r.line} ${r.name}: ${r.errors.map((e) => `${e.field} ${e.message}`).join('; ')}`);

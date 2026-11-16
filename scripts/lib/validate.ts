@@ -97,12 +97,23 @@ export function parseIntro(raw: string): { parts: TextPart[]; plain: string; err
 const clean = (v: string | undefined) => (v ?? '').replace(/ /g, ' ').replace(/\s+/g, ' ').trim();
 const isHttps = (v: string) => /^https:\/\/[^\s]+\.[^\s]+$/.test(v);
 
-export function validateRow(row: Row, line: number, lists: Lists): RowResult {
+/**
+ * proof: the PROOF site (drafts included, AGO 16/11/2026: "see the real result, even without photos").
+ * What a draft usually lacks becomes a warning instead of an error: package (→ corporate), logo, photo,
+ * photo_alt, and texts over the limit (the print preview then shows where they overflow).
+ */
+export interface ValidateOptions {
+  proof?: boolean;
+}
+
+export function validateRow(row: Row, line: number, lists: Lists, opts: ValidateOptions = {}): RowResult {
   const get = (k: string) => clean(row[k]);
   const errors: Issue[] = [];
   const warnings: Issue[] = [];
   const err = (field: string, message: string) => errors.push({ field, message });
   const warn = (field: string, message: string) => warnings.push({ field, message });
+  /** An error on the real site, a warning on the PROOF site. */
+  const soft = (field: string, message: string) => (opts.proof ? warn : err)(field, message);
 
   const required = (k: string) => {
     const v = get(k);
@@ -111,7 +122,7 @@ export function validateRow(row: Row, line: number, lists: Lists): RowResult {
   };
   const limited = (k: string, max: number, isRequired = true) => {
     const v = isRequired ? required(k) : get(k);
-    if (v.length > max) err(k, `${v.length}/${max} characters (${v.length - max} too many)`);
+    if (v.length > max) soft(k, `${v.length}/${max} characters (${v.length - max} too many)`);
     return v;
   };
 
@@ -128,8 +139,11 @@ export function validateRow(row: Row, line: number, lists: Lists): RowResult {
   if (!STATUSES.includes(status)) err('status', `"${status}" not valid (${STATUSES.join(', ')})`);
 
   const pkgRaw = get('package');
-  const pkg = (PACKAGE_ALIASES[pkgRaw] ?? pkgRaw) as Package;
-  if (!PACKAGES.includes(pkg)) err('package', `"${pkgRaw}" not valid (${PACKAGES.join(', ')})`);
+  let pkg = (PACKAGE_ALIASES[pkgRaw] ?? pkgRaw) as Package;
+  if (!PACKAGES.includes(pkg) && opts.proof) {
+    warn('package', `${pkgRaw ? `"${pkgRaw}" not valid` : 'missing'}: shown as corporate in the proof`);
+    pkg = 'corporate';
+  } else if (!PACKAGES.includes(pkg)) err('package', `"${pkgRaw}" not valid (${PACKAGES.join(', ')})`);
   else if (pkg !== pkgRaw) warn('package', `"${pkgRaw}" is the old name: write "${pkg}" (${PACKAGE_INFO[pkg].label})`);
 
   const sortRaw = get('sort_order');
@@ -161,7 +175,7 @@ export function validateRow(row: Row, line: number, lists: Lists): RowResult {
   const introRaw = required('intro');
   const intro = parseIntro(introRaw);
   if (intro.error) err('intro', intro.error);
-  if (intro.plain.length > LIMITS.intro) err('intro', `${intro.plain.length}/${LIMITS.intro} characters (${intro.plain.length - LIMITS.intro} too many)`);
+  if (intro.plain.length > LIMITS.intro) soft('intro', `${intro.plain.length}/${LIMITS.intro} characters (${intro.plain.length - LIMITS.intro} too many)`);
 
   const mission = limited('mission', LIMITS.mission);
   const vision = limited('vision', LIMITS.vision);
@@ -219,9 +233,14 @@ export function validateRow(row: Row, line: number, lists: Lists): RowResult {
   }
 
   // --- images --------------------------------------------------------------
-  const logo = required('logo');
-  const photo = required('photo');
-  const photoAlt = limited('photo_alt', LIMITS.photo_alt);
+  const media = (k: string) => {
+    const v = get(k);
+    if (!v) soft(k, opts.proof ? 'missing: placeholder in the proof' : 'missing');
+    return v;
+  };
+  const logo = media('logo');
+  const photo = media('photo');
+  const photoAlt = get('photo_alt') ? limited('photo_alt', LIMITS.photo_alt) : media('photo_alt');
   // Portfolio (gallery_1..2): only the Extended Profile, one photo per page. The sheet still has
   // gallery_3..6 from the first version: they must stay empty.
   const gallery: { file: string; alt: string }[] = [];

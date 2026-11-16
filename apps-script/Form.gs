@@ -452,4 +452,6 @@ function imaOnFormSubmit(e) {
   } finally {
     lock.releaseLock();
   }
+  // The new company goes into the InDesign folder at once (InDesign.gs); never blocks the answer.
+  try { imaInDesignExport_(); } catch (err) { Logger.log('InDesign folder: ' + err.message); }
 }

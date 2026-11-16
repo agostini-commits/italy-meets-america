@@ -92,6 +92,31 @@ jobs:
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
         run: npx -y netlify-cli@27.13.0 deploy --prod --dir dist --no-build --message "Publish by $REQUESTED_BY (run ${{ github.run_id }})"
 
+      # PROOF site: the same yearbook with every row of the sheet (drafts too, placeholders for missing
+      # photos), at a fixed address that is never indexed. To see how a card comes out before approval.
+      - name: Proof site (drafts included)
+        if: success()
+        # a problem here never marks the real publication as failed
+        continue-on-error: true
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+          PROOF: '1'
+        run: |
+          # the report of the real site stays the one in the summary and in the sheet
+          cp data/import-report.md data/import-report.site.md
+          cp data/import-report.json data/import-report.site.json
+          cp data/companies.json data/companies.site.json
+          npm run import-data -- --proof
+          npm run images
+          SITE_URL="https://proof--italy-meets-america.netlify.app" npm run build
+          npx -y netlify-cli@27.13.0 deploy --dir dist --no-build --alias proof --message "Proof by $REQUESTED_BY (run ${{ github.run_id }})"
+          echo "PROOF site: https://proof--italy-meets-america.netlify.app" >> "$GITHUB_STEP_SUMMARY"
+          mv data/import-report.md data/import-report.proof.md
+          mv data/import-report.site.md data/import-report.md
+          mv data/import-report.site.json data/import-report.json
+          mv data/companies.site.json data/companies.json
+
       - name: Report in the summary
         if: always() && steps.checkout.outcome == 'success'
         run: |
@@ -104,6 +129,7 @@ jobs:
           name: import-report
           path: |
             data/import-report.md
+            data/import-report.proof.md
             data/import-report.json
             data/companies.json
           if-no-files-found: ignore

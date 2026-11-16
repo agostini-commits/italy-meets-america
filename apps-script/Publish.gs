@@ -24,6 +24,9 @@ function onOpen() {
     .addItem('Publish status', 'imaStatus')
     .addSeparator()
     .addItem('Open the site', 'imaOpenSite')
+    .addItem('Open the proof (drafts included)', 'imaOpenProof')
+    .addSeparator()
+    .addItem('Update the InDesign folder', 'imaInDesignExport')
     .addSeparator()
     .addItem('Create the company form', 'imaCreateForm')
     .addItem('Rebuild the company form', 'imaRebuildForm')
@@ -134,4 +137,13 @@ function imaOpenSite() {
   SpreadsheetApp.getUi().showModalDialog(
     HtmlService.createHtmlOutput('<p style="font:15px sans-serif"><a href="' + IMA.SITE + '" target="_blank">' + IMA.SITE + '</a></p>').setWidth(380).setHeight(90),
     'Italy meets America');
+}
+
+/** PROOF site: every row of the sheet (drafts too, placeholders for missing photos), updated by "Publish to site". */
+function imaOpenProof() {
+  var url = 'https://proof--italy-meets-america.netlify.app';
+  SpreadsheetApp.getUi().showModalDialog(
+    HtmlService.createHtmlOutput('<p style="font:15px sans-serif"><a href="' + url + '" target="_blank">' + url + '</a></p>' +
+      '<p style="font:13px sans-serif;color:#555">Updated by every "Publish to site". Print preview: Print in the menu of the page.</p>').setWidth(420).setHeight(130),
+    'Italy meets America – proof');
 }

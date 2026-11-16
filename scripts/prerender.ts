@@ -17,6 +17,8 @@ import { shell } from '../src/views/shell';
 
 const ROOT = new URL('..', import.meta.url).pathname;
 const DIST = join(ROOT, 'dist');
+/** PROOF=1: the proof site (npm run import-data -- --proof), see .github/workflows/publish.yml. */
+const PROOF = process.env.PROOF === '1';
 const SITE = (process.env.SITE_URL ?? process.env.URL ?? 'https://italy-meets-america.netlify.app').replace(/\/$/, '');
 
 const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -60,7 +62,14 @@ function meta(p: { title: string; description: string; url: string; image?: stri
 }
 
 async function main() {
-  const template = await readFile(join(DIST, 'index.html'), 'utf8');
+  let template = await readFile(join(DIST, 'index.html'), 'utf8');
+  if (PROOF) {
+    // PROOF site (drafts included): never indexed, and a band on every page says it is not the yearbook.
+    template = template
+      .replace('</head>', '<meta name="robots" content="noindex, nofollow" />\n  </head>')
+      .replace('<div id="app"></div>', '<div class="proof-band" role="note">PROOF · drafts included · not the published yearbook</div><div id="app"></div>');
+    await writeFile(join(DIST, 'index.html'), template);
+  }
   const block = /<!-- meta:start[\s\S]*?<!-- meta:end -->/;
   if (!block.test(template)) throw new Error('index.html: meta:start / meta:end markers not found');
   if (!template.includes('<div id="app"></div>')) throw new Error('index.html: <div id="app"></div> not found');
@@ -128,7 +137,7 @@ async function main() {
     join(DIST, 'sitemap.xml'),
     `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map((u) => `  <url><loc>${esc(u)}</loc></url>`).join('\n')}\n</urlset>\n`,
   );
-  await writeFile(join(DIST, 'robots.txt'), `User-agent: *\nAllow: /\nSitemap: ${SITE}/sitemap.xml\n`);
+  await writeFile(join(DIST, 'robots.txt'), PROOF ? 'User-agent: *\nDisallow: /\n' : `User-agent: *\nAllow: /\nSitemap: ${SITE}/sitemap.xml\n`);
   console.log(`✔ Prerender: ${count} card pages with Open Graph, site ${SITE}`);
 }
 
